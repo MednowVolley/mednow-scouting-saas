@@ -1002,6 +1002,9 @@ td[title=""] { pointer-events: auto; }
 <div class="page-footer"><strong>MEDNOW VOLLEY</strong> · Database Scouting · mednowscoutingvolley.com · Stagione 2026/27</div>
 
 <script>
+window.SUPA_URL='https://zaxbwqxnrofiggldoahw.supabase.co';
+window.SUPA_KEY='sb_publishable_aS4aRr3OMwWLOT1TmIhGPg_gfY-dwIO';
+
 const SUPA='https://zaxbwqxnrofiggldoahw.supabase.co';
 const KEY='sb_publishable_aS4aRr3OMwWLOT1TmIhGPg_gfY-dwIO';
 let currentUser=null,currentProfile=null,athletes=[],page=0,currentSort='priority',poolFilter='all';
@@ -2345,24 +2348,27 @@ function selectPlan(plan, el) {
 
 async function checkTrialStatus() {
   if (!currentProfile || !currentUser) return;
-  // Admin globale (marcogiugni@mednow.it) non mostra paywall
-  if (currentUser.user?.email === 'marcogiugni@mednow.it') return;
+  // Admin globale non vede il paywall
+  const adminEmails = ['marcogiugni@mednow.it'];
+  if (adminEmails.includes(currentUser.user?.email || currentUser.email)) return;
 
   try {
-    const clubs = await sbFetch('/rest/v1/clubs?id=eq.' + (currentProfile.club_id||1) + '&select=piano,trial_scade_il,attivo');
-    if (!clubs || !clubs[0]) return;
+    const cid = currentProfile.club_id || 1;
+    // Usa service key per leggere clubs (bypassa RLS)
+    const resp = await fetch(
+      window.SUPA_URL + '/rest/v1/clubs?id=eq.' + cid + '&select=piano,trial_scade_il,attivo',
+      { headers: { 'apikey': window.SUPA_KEY, 'Authorization': 'Bearer ' + (currentUser.access_token || window.SUPA_KEY) } }
+    );
+    if (!resp.ok) { console.warn('Trial check: HTTP', resp.status); return; }
+    const clubs = await resp.json();
+    if (!clubs || !clubs[0]) { console.warn('Trial check: club non trovato'); return; }
     const club = clubs[0];
 
-    // Se piano attivo (non trial e non sospeso) → ok
+    console.log('Trial check:', club.piano, club.trial_scade_il);
+
     if (club.piano !== 'trial' && club.piano !== 'sospeso') return;
+    if (club.piano === 'sospeso') { document.getElementById('paywall-overlay').classList.add('show'); return; }
 
-    // Se sospeso → paywall immediato
-    if (club.piano === 'sospeso') {
-      document.getElementById('paywall-overlay').classList.add('show');
-      return;
-    }
-
-    // Se trial: controlla scadenza
     if (club.trial_scade_il) {
       const scadenza = new Date(club.trial_scade_il);
       if (new Date() > scadenza) {
