@@ -187,6 +187,13 @@ document.getElementById('signup-form').addEventListener('submit', async function
       throw new Error('Errore configurazione club — contatta il supporto.');
     }
 
+    // 2b. Invia email di benvenuto (best-effort, non blocca)
+    fetch('/.netlify/functions/send-welcome', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({ email, nome, club_nome: clubNome })
+    }).catch(() => {}); // silenzioso se fallisce
+
     // 3. Mostra successo
     document.getElementById('form-card').style.display='none';
     const sc = document.getElementById('success-card');
