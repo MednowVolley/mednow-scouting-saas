@@ -418,6 +418,36 @@ td[title=""] { pointer-events: auto; }
 .pw-note{font-size:12px;color:#9CA3AF;margin-top:12px}
 .pw-logout{font-size:12px;color:#9CA3AF;text-decoration:underline;cursor:pointer;margin-top:8px;display:inline-block}
 
+
+/* ── ONBOARDING ── */
+#onboarding-overlay{display:none;position:fixed;inset:0;background:rgba(10,22,40,0.92);z-index:9998;align-items:center;justify-content:center;font-family:'Inter',sans-serif}
+#onboarding-overlay.show{display:flex}
+.ob-card{background:#fff;border-radius:24px;padding:0;max-width:520px;width:92%;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,0.5)}
+.ob-header{background:#0A1628;padding:28px 36px 0}
+.ob-progress{display:flex;gap:6px;margin-bottom:20px}
+.ob-dot{height:3px;border-radius:2px;background:rgba(255,255,255,0.2);transition:all .3s;flex:1}
+.ob-dot.active{background:#1e6aff}
+.ob-dot.done{background:#5DCAA5}
+.ob-step-label{font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+.ob-step-title{font-family:'Barlow',sans-serif;font-size:26px;font-weight:900;color:#fff;margin-bottom:20px;line-height:1.1}
+.ob-body{padding:28px 36px 32px}
+.ob-icon{font-size:48px;margin-bottom:16px;display:block}
+.ob-desc{font-size:15px;color:#4B5563;line-height:1.65;margin-bottom:24px}
+.ob-feature-list{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:28px}
+.ob-feature-list li{display:flex;align-items:center;gap:10px;font-size:14px;color:#374151}
+.ob-feature-list li::before{content:'✓';font-weight:800;color:#1e6aff;flex-shrink:0;font-size:15px}
+.ob-actions{display:flex;align-items:center;justify-content:space-between}
+.ob-skip{font-size:13px;color:#9CA3AF;cursor:pointer;text-decoration:underline;background:none;border:none}
+.ob-skip:hover{color:#6B7280}
+.ob-btns{display:flex;gap:10px}
+.ob-next{padding:11px 24px;background:#1e6aff;color:#fff;border:none;border-radius:10px;font-family:'Barlow',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .15s}
+.ob-next:hover{background:#1558e0;transform:translateY(-1px)}
+.ob-next.green{background:#5DCAA5}
+.ob-next.green:hover{background:#3BA78D}
+.ob-action-btn{padding:11px 20px;background:#EBF4FF;color:#185FA5;border:none;border-radius:10px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:all .15s}
+.ob-action-btn:hover{background:#BFDBFE}
+.ob-trial-bar{background:#EBF4FF;border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;margin-bottom:20px;font-size:13px;color:#185FA5;font-weight:600}
+
 </style>
 
 <style id="court-override">
@@ -547,6 +577,19 @@ td[title=""] { pointer-events: auto; }
 </head>
 <body>
 <!-- PAYWALL -->
+
+<!-- ONBOARDING -->
+<div id="onboarding-overlay">
+  <div class="ob-card">
+    <div class="ob-header">
+      <div class="ob-progress" id="ob-progress"></div>
+      <div class="ob-step-label" id="ob-step-label"></div>
+      <div class="ob-step-title" id="ob-step-title"></div>
+    </div>
+    <div class="ob-body" id="ob-body"></div>
+  </div>
+</div>
+
 <div id="paywall-overlay">
   <div class="pw-card">
     <div class="pw-badge">⏰ Trial scaduto</div>
@@ -1103,7 +1146,7 @@ async function doLogin(){
   }catch(e){err.textContent='Errore: '+e.message;err.classList.add('show');btn.disabled=false;btn.textContent='Accedi';}
 }
 
-function startApp(){checkPaymentReturn();setTimeout(checkTrialStatus,1000);
+function startApp(){checkPaymentReturn();setTimeout(checkTrialStatus,1000);setTimeout(checkOnboarding,2000);
   document.getElementById('login-screen').style.display='none';
   document.getElementById('app-screen').style.display='block';
   renderUserBadge();renderAdminActions();renderAddCard();
@@ -2335,6 +2378,151 @@ document.addEventListener('click', function(e){
 function startNotifPolling(){
   loadNotifications();
   setInterval(loadNotifications, 60000);
+}
+
+
+// ── ONBOARDING ──
+const OB_STEPS = [
+  {
+    label: 'Passo 1 di 4',
+    title: 'Benvenuto in\nMednow Scouting!',
+    body: `
+      <span class="ob-icon">🏐</span>
+      <div class="ob-trial-bar">⏱ Hai 7 giorni gratuiti per esplorare tutto</div>
+      <p class="ob-desc">La piattaforma gestionale pensata per le società di pallavolo italiane. In pochi minuti avrai il tuo database atlete operativo.</p>
+      <ul class="ob-feature-list">
+        <li>Database atlete con foto, ruolo e trattative</li>
+        <li>Roster interattivo con campo visivo</li>
+        <li>Dashboard trattative in tempo reale</li>
+        <li>Multi-utente con ruoli separati</li>
+      </ul>
+      <div class="ob-actions">
+        <button class="ob-skip" onclick="skipOnboarding()">Salta guida</button>
+        <div class="ob-btns"><button class="ob-next" onclick="obNext()">Inizia →</button></div>
+      </div>`
+  },
+  {
+    label: 'Passo 2 di 4',
+    title: 'Aggiungi la tua\nprima atleta',
+    body: `
+      <span class="ob-icon">👩</span>
+      <p class="ob-desc">Inizia aggiungendo le atlete della tua rosa. Per ognuna puoi inserire ruolo, anno di nascita, società, agente e una valutazione da 1 a 10.</p>
+      <ul class="ob-feature-list">
+        <li>Clicca il pulsante <strong>"+ Atleta"</strong> in alto a destra</li>
+        <li>Compila nome, cognome, ruolo e anno</li>
+        <li>Salva e la trovi subito nel database</li>
+      </ul>
+      <div class="ob-actions">
+        <button class="ob-skip" onclick="skipOnboarding()">Salta guida</button>
+        <div class="ob-btns">
+          <button class="ob-action-btn" onclick="obOpenAddAthlete()">+ Aggiungi atleta</button>
+          <button class="ob-next" onclick="obNext()">Avanti →</button>
+        </div>
+      </div>`
+  },
+  {
+    label: 'Passo 3 di 4',
+    title: 'Costruisci il\ntuo roster',
+    body: `
+      <span class="ob-icon">📋</span>
+      <p class="ob-desc">Nella sezione <strong>Roster</strong> trovi il campo da gioco interattivo. Assegna le atlete ai ruoli, gestisci titolari e panchina per ogni squadra della tua società.</p>
+      <ul class="ob-feature-list">
+        <li>Crea le tue squadre (U13, U15, U17...)</li>
+        <li>Trascina le atlete nei 6 slot del sestetto</li>
+        <li>Aggiungi riserve alla panchina</li>
+      </ul>
+      <div class="ob-actions">
+        <button class="ob-skip" onclick="skipOnboarding()">Salta guida</button>
+        <div class="ob-btns">
+          <button class="ob-action-btn" onclick="obGoToRoster()">Vai ai roster</button>
+          <button class="ob-next" onclick="obNext()">Avanti →</button>
+        </div>
+      </div>`
+  },
+  {
+    label: 'Passo 4 di 4',
+    title: 'Invita il tuo\nstaff',
+    body: `
+      <span class="ob-icon">👥</span>
+      <p class="ob-desc">Puoi aggiungere allenatori, dirigenti e scouting con accessi separati. Ognuno vede solo quello che gli compete — nessuna confusione.</p>
+      <ul class="ob-feature-list">
+        <li><strong>Admin</strong> — accesso completo</li>
+        <li><strong>Allenatore</strong> — vede e modifica le sue atlete</li>
+        <li><strong>Dirigente</strong> — gestione trattative</li>
+        <li><strong>Scouting</strong> — solo lettura</li>
+      </ul>
+      <div class="ob-actions">
+        <button class="ob-skip" onclick="skipOnboarding()">Salta per ora</button>
+        <div class="ob-btns">
+          <button class="ob-next green" onclick="finishOnboarding()">Inizia a usare l'app ✓</button>
+        </div>
+      </div>`
+  }
+];
+let obCurrentStep = 0;
+
+function renderOnboarding() {
+  const step = OB_STEPS[obCurrentStep];
+  // Progress dots
+  const dots = OB_STEPS.map((_, i) => {
+    const cls = i < obCurrentStep ? 'done' : i === obCurrentStep ? 'active' : '';
+    return `<div class="ob-dot ${cls}"></div>`;
+  }).join('');
+  document.getElementById('ob-progress').innerHTML = dots;
+  document.getElementById('ob-step-label').textContent = step.label;
+  document.getElementById('ob-step-title').textContent = step.title;
+  document.getElementById('ob-body').innerHTML = step.body;
+}
+
+function obNext() {
+  if (obCurrentStep < OB_STEPS.length - 1) {
+    obCurrentStep++;
+    renderOnboarding();
+  }
+}
+
+function obOpenAddAthlete() {
+  skipOnboarding();
+  setTimeout(() => {
+    const btn = document.querySelector('[onclick*="showAddModal"]') || document.getElementById('add-athlete-btn');
+    if (btn) btn.click();
+  }, 300);
+}
+
+function obGoToRoster() {
+  skipOnboarding();
+  setTimeout(() => {
+    const rosterBtn = document.querySelector('[onclick*="roster"]') || document.querySelector('[data-section="roster"]');
+    if (rosterBtn) rosterBtn.click();
+  }, 300);
+}
+
+function skipOnboarding() {
+  document.getElementById('onboarding-overlay').classList.remove('show');
+  if (currentProfile?.club_id) {
+    localStorage.setItem('ob_done_' + currentProfile.club_id, '1');
+  }
+}
+
+function finishOnboarding() {
+  skipOnboarding();
+}
+
+function checkOnboarding() {
+  if (!currentProfile) return;
+  // Solo per nuovi club (non Mednow Volley = club_id 1)
+  if (currentProfile.club_id === 1) return;
+  // Solo admin vede onboarding
+  if (currentProfile.ruolo !== 'admin') return;
+  // Solo se non già completato
+  const done = localStorage.getItem('ob_done_' + currentProfile.club_id);
+  if (done) return;
+  // Mostra dopo 1.5s (dopo che l'app è caricata)
+  setTimeout(() => {
+    obCurrentStep = 0;
+    renderOnboarding();
+    document.getElementById('onboarding-overlay').classList.add('show');
+  }, 1500);
 }
 
 // ── PAYWALL LOGIC ──
