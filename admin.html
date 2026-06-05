@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin — Mednow Scouting</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@600;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#0A1628;min-height:100vh;color:#fff}
+
+/* LOGIN */
+#login-screen{display:flex;align-items:center;justify-content:center;min-height:100vh;padding:20px}
+.login-card{background:#fff;border-radius:20px;padding:48px 44px;width:100%;max-width:420px;text-align:center}
+.login-logo{font-family:'Barlow',sans-serif;font-size:22px;font-weight:900;color:#0A1628;margin-bottom:8px}
+.login-logo span{color:#185FA5}
+.login-sub{font-size:13px;color:#6B7280;margin-bottom:32px}
+.login-input{width:100%;padding:12px 14px;border:2px solid #E5E7EB;border-radius:10px;font-size:14px;outline:none;margin-bottom:12px;transition:border-color .15s}
+.login-input:focus{border-color:#1e6aff}
+.login-btn{width:100%;padding:13px;background:#0A1628;color:#fff;border:none;border-radius:10px;font-family:'Barlow',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:background .15s}
+.login-btn:hover{background:#185FA5}
+.login-err{color:#DC2626;font-size:13px;margin-top:8px;display:none}
+
+/* DASHBOARD */
+#dashboard{display:none;padding:0}
+.topbar{background:#0F1E35;border-bottom:1px solid rgba(255,255,255,0.08);padding:16px 32px;display:flex;align-items:center;justify-content:space-between}
+.topbar-logo{font-family:'Barlow',sans-serif;font-size:18px;font-weight:800;color:#fff}
+.topbar-logo span{color:#4DA3E8}
+.topbar-badge{background:#1e6aff;color:#fff;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px}
+.topbar-logout{font-size:13px;color:rgba(255,255,255,0.5);cursor:pointer;text-decoration:underline}
+.dash-inner{padding:32px;max-width:1400px;margin:0 auto}
+.dash-title{font-family:'Barlow',sans-serif;font-size:28px;font-weight:900;margin-bottom:6px}
+.dash-sub{font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:32px}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-bottom:32px}
+.kpi-card{background:#0F1E35;border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:20px}
+.kpi-label{font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px}
+.kpi-val{font-family:'Barlow',sans-serif;font-size:32px;font-weight:900;line-height:1}
+.kpi-val.green{color:#5DCAA5}
+.kpi-val.blue{color:#4DA3E8}
+.kpi-val.yellow{color:#FAC775}
+.kpi-val.red{color:#F87171}
+.kpi-val.white{color:#fff}
+.kpi-val.gold{color:#FCD34D}
+
+/* TABLE */
+.table-section{background:#0F1E35;border:1px solid rgba(255,255,255,0.08);border-radius:16px;overflow:hidden}
+.table-header{padding:20px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.06)}
+.table-title{font-family:'Barlow',sans-serif;font-size:16px;font-weight:700}
+.refresh-btn{background:rgba(255,255,255,0.08);border:none;color:#fff;padding:7px 14px;border-radius:8px;font-size:13px;cursor:pointer;transition:background .15s}
+.refresh-btn:hover{background:rgba(255,255,255,0.15)}
+table{width:100%;border-collapse:collapse}
+thead th{padding:12px 16px;text-align:left;font-size:11px;font-weight:700;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid rgba(255,255,255,0.06)}
+tbody tr{border-bottom:1px solid rgba(255,255,255,0.04);transition:background .1s}
+tbody tr:hover{background:rgba(255,255,255,0.03)}
+tbody tr:last-child{border:none}
+td{padding:14px 16px;font-size:13px;color:rgba(255,255,255,0.85);vertical-align:middle}
+.club-name{font-weight:600;color:#fff}
+.club-email{font-size:12px;color:rgba(255,255,255,0.45);margin-top:2px}
+.badge{display:inline-flex;align-items:center;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px}
+.b-trial{background:rgba(250,199,117,0.15);color:#FAC775}
+.b-starter{background:rgba(77,163,232,0.15);color:#4DA3E8}
+.b-club{background:rgba(93,202,165,0.15);color:#5DCAA5}
+.b-sospeso{background:rgba(248,113,113,0.15);color:#F87171}
+.b-pro{background:rgba(167,139,250,0.15);color:#A78BFA}
+.days-ok{color:#5DCAA5;font-weight:600}
+.days-warn{color:#FAC775;font-weight:600}
+.days-exp{color:#F87171;font-weight:600}
+.action-btn{background:rgba(30,106,255,0.15);border:1px solid rgba(30,106,255,0.3);color:#7FB3F5;padding:5px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;margin-right:4px}
+.action-btn:hover{background:rgba(30,106,255,0.3);color:#fff}
+.loading{text-align:center;padding:60px;color:rgba(255,255,255,0.3);font-size:14px}
+
+@media(max-width:1024px){.kpi-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.topbar{padding:12px 16px}.dash-inner{padding:16px}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">Mednow<span>Scouting</span></div>
+    <p class="login-sub">Accesso riservato · Area amministratore</p>
+    <input type="password" id="admin-pwd" class="login-input" placeholder="Password amministratore" onkeydown="if(event.key==='Enter')doAdminLogin()">
+    <button class="login-btn" onclick="doAdminLogin()">Accedi →</button>
+    <p class="login-err" id="login-err">Password errata</p>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="dashboard">
+  <div class="topbar">
+    <span class="topbar-logo">Mednow<span>Scouting</span> <span class="topbar-badge">ADMIN</span></span>
+    <span class="topbar-logout" onclick="doLogout()">Esci</span>
+  </div>
+  <div class="dash-inner">
+    <div class="dash-title">Dashboard</div>
+    <div class="dash-sub" id="last-update">Caricamento in corso...</div>
+    <div class="kpi-grid" id="kpi-grid">
+      <div class="kpi-card"><div class="kpi-label">Club totali</div><div class="kpi-val white" id="k-totale">—</div></div>
+      <div class="kpi-card"><div class="kpi-label">In trial</div><div class="kpi-val yellow" id="k-trial">—</div></div>
+      <div class="kpi-card"><div class="kpi-label">Starter</div><div class="kpi-val blue" id="k-starter">—</div></div>
+      <div class="kpi-card"><div class="kpi-label">Club</div><div class="kpi-val green" id="k-club">—</div></div>
+      <div class="kpi-card"><div class="kpi-label">Sospesi</div><div class="kpi-val red" id="k-sospesi">—</div></div>
+      <div class="kpi-card"><div class="kpi-label">MRR</div><div class="kpi-val gold" id="k-mrr">—</div></div>
+    </div>
+    <div class="table-section">
+      <div class="table-header">
+        <span class="table-title">Club registrati</span>
+        <button class="refresh-btn" onclick="loadData()">↻ Aggiorna</button>
+      </div>
+      <div id="table-container"><div class="loading">Caricamento...</div></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ENDPOINT = '/.netlify/functions/get-admin-data';
+let adminToken = '';
+
+function doAdminLogin() {
+  const pwd = document.getElementById('admin-pwd').value;
+  if (!pwd) return;
+  adminToken = pwd;
+  loadData();
+}
+
+function doLogout() {
+  adminToken = '';
+  document.getElementById('dashboard').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+  document.getElementById('admin-pwd').value = '';
+}
+
+async function loadData() {
+  try {
+    const r = await fetch(ENDPOINT, { headers: { 'x-admin-token': adminToken } });
+    if (r.status === 401) {
+      document.getElementById('login-err').style.display = 'block';
+      return;
+    }
+    document.getElementById('login-err').style.display = 'none';
+    const data = await r.json();
+
+    // Mostra dashboard
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+
+    // KPI
+    const k = data.kpi;
+    document.getElementById('k-totale').textContent = k.totale;
+    document.getElementById('k-trial').textContent = k.trial;
+    document.getElementById('k-starter').textContent = k.starter;
+    document.getElementById('k-club').textContent = k.club;
+    document.getElementById('k-sospesi').textContent = k.sospesi;
+    document.getElementById('k-mrr').textContent = '€' + k.mrr;
+    document.getElementById('last-update').textContent = 'Aggiornato: ' + new Date().toLocaleString('it-IT');
+
+    // Tabella
+    if (!data.clubs.length) {
+      document.getElementById('table-container').innerHTML = '<div class="loading">Nessun club registrato</div>';
+      return;
+    }
+
+    const rows = data.clubs.map(c => {
+      const pianoClass = {trial:'b-trial',starter:'b-starter',club:'b-club',sospeso:'b-sospeso',pro:'b-pro'}[c.piano]||'b-trial';
+      const scadenza = c.trial_scade_il ? new Date(c.trial_scade_il).toLocaleDateString('it-IT') : '—';
+      let giorniHtml = '—';
+      if (c.giorni_rimasti !== null) {
+        const cls = c.giorni_rimasti > 3 ? 'days-ok' : c.giorni_rimasti > 0 ? 'days-warn' : 'days-exp';
+        giorniHtml = `<span class="${cls}">${c.giorni_rimasti > 0 ? c.giorni_rimasti + 'gg' : 'Scaduto'}</span>`;
+      }
+      return `<tr>
+        <td><div class="club-name">${c.nome||'—'}</div><div class="club-email">${c.admin_email}</div></td>
+        <td>${c.admin_nome||'—'}</td>
+        <td><span class="badge ${pianoClass}">${c.piano||'trial'}</span></td>
+        <td>${scadenza}</td>
+        <td>${giorniHtml}</td>
+        <td>${c.stripe_customer_id ? '<span style="color:#5DCAA5;font-size:11px">✓ Stripe</span>' : '<span style="color:rgba(255,255,255,0.3);font-size:11px">—</span>'}</td>
+        <td>${new Date(c.created_at).toLocaleDateString('it-IT')}</td>
+        <td>
+          <button class="action-btn" onclick="extendTrial(${c.id})">+7gg</button>
+        </td>
+      </tr>`;
+    }).join('');
+
+    document.getElementById('table-container').innerHTML = `
+      <table>
+        <thead><tr>
+          <th>Club</th><th>Admin</th><th>Piano</th><th>Scadenza</th><th>Giorni</th><th>Stripe</th><th>Registrato</th><th>Azioni</th>
+        </tr></thead>
+        <tbody>${rows}</tbody>
+      </table>`;
+  } catch(e) {
+    console.error(e);
+    document.getElementById('login-err').textContent = 'Errore di connessione';
+    document.getElementById('login-err').style.display = 'block';
+  }
+}
+
+async function extendTrial(clubId) {
+  const ok = confirm('Estendere il trial di 7 giorni per questo club?');
+  if (!ok) return;
+  const r = await fetch('/.netlify/functions/get-admin-data', {
+    method: 'POST',
+    headers: { 'x-admin-token': adminToken, 'Content-Type': 'application/json' },
+    body: JSON.stringify({ action: 'extend_trial', club_id: clubId })
+  });
+  if (r.ok) { alert('Trial esteso!'); loadData(); }
+}
+</script>
+</body>
+</html>
