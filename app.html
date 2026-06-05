@@ -397,6 +397,27 @@ td[title=""] { pointer-events: auto; }
   z-index: 10;
 }
 
+
+/* ── PAYWALL ── */
+#paywall-overlay{display:none;position:fixed;inset:0;background:rgba(10,22,40,0.96);z-index:9999;align-items:center;justify-content:center;font-family:'Inter',sans-serif}
+#paywall-overlay.show{display:flex}
+.pw-card{background:#fff;border-radius:24px;padding:48px 44px;max-width:560px;width:90%;text-align:center;box-shadow:0 32px 80px rgba(0,0,0,0.5)}
+.pw-badge{display:inline-flex;align-items:center;gap:6px;background:#FEF3C7;color:#92400E;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px;margin-bottom:20px}
+.pw-title{font-size:28px;font-weight:900;color:#0A1628;margin-bottom:10px;font-family:'Barlow',sans-serif}
+.pw-sub{font-size:15px;color:#6B7280;margin-bottom:32px;line-height:1.6}
+.pw-plans{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+.pw-plan{border:2px solid #DDE3EC;border-radius:12px;padding:20px;cursor:pointer;transition:all .15s;text-align:left}
+.pw-plan:hover,.pw-plan.selected{border-color:#1e6aff;background:#EBF4FF}
+.pw-plan-name{font-size:12px;font-weight:700;color:#185FA5;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+.pw-plan-price{font-size:30px;font-weight:900;color:#0A1628;font-family:'Barlow',sans-serif;line-height:1}
+.pw-plan-period{font-size:11px;color:#9CA3AF;margin-top:2px}
+.pw-plan-features{font-size:12px;color:#6B7280;margin-top:10px;line-height:1.7}
+.pw-btn{width:100%;padding:15px;background:linear-gradient(135deg,#185FA5,#1e6aff);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;font-family:'Barlow',sans-serif;cursor:pointer;transition:all .15s}
+.pw-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(30,106,255,0.35)}
+.pw-btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.pw-note{font-size:12px;color:#9CA3AF;margin-top:12px}
+.pw-logout{font-size:12px;color:#9CA3AF;text-decoration:underline;cursor:pointer;margin-top:8px;display:inline-block}
+
 </style>
 
 <style id="court-override">
@@ -525,6 +546,32 @@ td[title=""] { pointer-events: auto; }
 </style>
 </head>
 <body>
+<!-- PAYWALL -->
+<div id="paywall-overlay">
+  <div class="pw-card">
+    <div class="pw-badge">⏰ Trial scaduto</div>
+    <div class="pw-title">Scegli il tuo piano</div>
+    <p class="pw-sub">Il tuo periodo di prova è terminato. Scegli un piano per continuare a usare Mednow Scouting.</p>
+    <div class="pw-plans">
+      <div class="pw-plan selected" onclick="selectPlan('starter',this)">
+        <div class="pw-plan-name">Starter</div>
+        <div class="pw-plan-price">€29</div>
+        <div class="pw-plan-period">al mese</div>
+        <div class="pw-plan-features">✓ 2 squadre<br>✓ 100 atlete<br>✓ 3 utenti</div>
+      </div>
+      <div class="pw-plan" onclick="selectPlan('club',this)">
+        <div class="pw-plan-name">Club ⭐</div>
+        <div class="pw-plan-price">€79</div>
+        <div class="pw-plan-period">al mese</div>
+        <div class="pw-plan-features">✓ Illimitato<br>✓ 10 utenti<br>✓ Priorità</div>
+      </div>
+    </div>
+    <button class="pw-btn" id="pw-subscribe-btn" onclick="goToCheckout()">Abbonati ora →</button>
+    <p class="pw-note">Pagamento sicuro con Stripe · Disdici quando vuoi</p>
+    <span class="pw-logout" onclick="doLogout()">Esci dall'account</span>
+  </div>
+</div>
+
 
 <datalist id="dl-societa"></datalist>
 <datalist id="dl-dest">
@@ -1053,7 +1100,7 @@ async function doLogin(){
   }catch(e){err.textContent='Errore: '+e.message;err.classList.add('show');btn.disabled=false;btn.textContent='Accedi';}
 }
 
-function startApp(){
+function startApp(){checkPaymentReturn();setTimeout(checkTrialStatus,1000);
   document.getElementById('login-screen').style.display='none';
   document.getElementById('app-screen').style.display='block';
   renderUserBadge();renderAdminActions();renderAddCard();
@@ -2286,6 +2333,85 @@ function startNotifPolling(){
   loadNotifications();
   setInterval(loadNotifications, 60000);
 }
+
+// ── PAYWALL LOGIC ──
+let selectedPlan = 'starter';
+
+function selectPlan(plan, el) {
+  selectedPlan = plan;
+  document.querySelectorAll('.pw-plan').forEach(p => p.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+async function checkTrialStatus() {
+  if (!currentProfile || !currentUser) return;
+  // Admin globale (marcogiugni@mednow.it) non mostra paywall
+  if (currentUser.user?.email === 'marcogiugni@mednow.it') return;
+
+  try {
+    const clubs = await sbFetch('/rest/v1/clubs?id=eq.' + (currentProfile.club_id||1) + '&select=piano,trial_scade_il,attivo');
+    if (!clubs || !clubs[0]) return;
+    const club = clubs[0];
+
+    // Se piano attivo (non trial e non sospeso) → ok
+    if (club.piano !== 'trial' && club.piano !== 'sospeso') return;
+
+    // Se sospeso → paywall immediato
+    if (club.piano === 'sospeso') {
+      document.getElementById('paywall-overlay').classList.add('show');
+      return;
+    }
+
+    // Se trial: controlla scadenza
+    if (club.trial_scade_il) {
+      const scadenza = new Date(club.trial_scade_il);
+      if (new Date() > scadenza) {
+        document.getElementById('paywall-overlay').classList.add('show');
+      }
+    }
+  } catch(e) {
+    console.error('Trial check error:', e);
+  }
+}
+
+async function goToCheckout() {
+  const btn = document.getElementById('pw-subscribe-btn');
+  btn.disabled = true;
+  btn.textContent = 'Reindirizzamento a Stripe...';
+
+  try {
+    const res = await fetch('/.netlify/functions/create-checkout', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        plan: selectedPlan,
+        club_id: currentProfile.club_id || 1,
+        email: currentUser.user?.email || ''
+      })
+    });
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      throw new Error(data.error || 'Errore checkout');
+    }
+  } catch(e) {
+    btn.disabled = false;
+    btn.textContent = 'Abbonati ora →';
+    showToast('Errore: ' + e.message, 'error');
+  }
+}
+
+// Check payment success on return from Stripe
+function checkPaymentReturn() {
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('payment') === 'success') {
+    showToast('Pagamento completato! Abbonamento attivo.', 'success');
+    window.history.replaceState({}, '', window.location.pathname);
+    document.getElementById('paywall-overlay').classList.remove('show');
+  }
+}
+
 </script>
 <div class="toast" id="toast"></div>
 
