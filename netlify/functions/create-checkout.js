@@ -34,7 +34,6 @@ exports.handler = async (event) => {
       metadata: { club_id: String(club_id), plan },
       locale: 'it',
       subscription_data: {
-        trial_period_days: 0,
         metadata: { club_id: String(club_id), plan }
       }
     });
