@@ -1636,7 +1636,7 @@ async function addUser(){
   if(!nome||!email||!password){showToast('Compila tutti i campi','error');return;}
   if(password.length<8){showToast('Password min. 8 caratteri','error');return;}
   try{
-    const SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpheGJ3cXhucm9maWdnbGRvYWh3Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTQ0NDc5NSwiZXhwIjoyMDk1MDIwNzk1fQ.8P8EdHT-EHi7KSlV-k0hOyx3bWCLnV8CVDmRFnYSAuM';
+    const SKEY='REMOVED_SERVICE_KEY';
     const res=await fetch(SUPA+'/auth/v1/admin/users',{
       method:'POST',
       headers:{'Content-Type':'application/json','apikey':SKEY,'Authorization':'Bearer '+SKEY},
