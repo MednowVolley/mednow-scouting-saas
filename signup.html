@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mednow Scouting — Registra il tuo club</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#0A1628;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.card{background:#fff;border-radius:20px;padding:48px 44px;width:100%;max-width:480px;box-shadow:0 24px 80px rgba(0,0,0,0.4)}
+.logo{display:flex;align-items:center;gap:12px;margin-bottom:32px;justify-content:center}
+.logo img{width:44px}
+.logo-text{font-family:'Barlow',sans-serif;font-size:22px;font-weight:800;color:#0A1628;letter-spacing:-.3px}
+.logo-sub{font-size:11px;font-weight:600;color:#185FA5;text-transform:uppercase;letter-spacing:.08em;display:block;margin-top:-2px}
+h1{font-family:'Barlow',sans-serif;font-size:26px;font-weight:900;color:#0A1628;text-align:center;margin-bottom:6px}
+.subtitle{text-align:center;color:#6B7280;font-size:14px;margin-bottom:32px}
+.trial-badge{display:inline-flex;align-items:center;gap:6px;background:#EFF6FF;color:#1D4ED8;border:1px solid #BFDBFE;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;margin:0 auto 28px;display:flex;width:fit-content;margin:0 auto 28px}
+.form-group{margin-bottom:18px}
+label{display:block;font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px}
+input,select{width:100%;padding:12px 14px;border:2px solid #E5E7EB;border-radius:10px;font-size:14px;font-family:'Inter',sans-serif;color:#111827;outline:none;transition:border-color .15s,box-shadow .15s;background:#fff}
+input:focus,select:focus{border-color:#185FA5;box-shadow:0 0 0 3px rgba(24,95,165,0.12)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.btn{width:100%;padding:14px;background:linear-gradient(135deg,#185FA5,#1e6aff);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:700;font-family:'Barlow',sans-serif;cursor:pointer;transition:transform .12s,box-shadow .12s;margin-top:6px;letter-spacing:.02em}
+.btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(24,95,165,0.35)}
+.btn:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.error{background:#FEF2F2;border:1px solid #FECACA;color:#DC2626;border-radius:8px;padding:10px 14px;font-size:13px;margin-bottom:16px;display:none}
+.success{display:none;text-align:center}
+.success-icon{font-size:56px;margin-bottom:16px}
+.success h2{font-family:'Barlow',sans-serif;font-size:24px;font-weight:800;color:#0A1628;margin-bottom:8px}
+.success p{color:#6B7280;font-size:14px;margin-bottom:24px;line-height:1.6}
+.creds{background:#F0F7FF;border:1px solid #BFDBFE;border-radius:10px;padding:16px;margin-bottom:24px;text-align:left}
+.creds-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0}
+.creds-label{font-size:11px;font-weight:700;color:#6B7280;text-transform:uppercase}
+.creds-val{font-size:13px;font-weight:600;color:#1D4ED8;font-family:monospace}
+.btn-login{display:inline-block;padding:14px 32px;background:linear-gradient(135deg,#185FA5,#1e6aff);color:#fff;border-radius:12px;font-size:16px;font-weight:700;font-family:'Barlow',sans-serif;text-decoration:none;transition:transform .12s}
+.btn-login:hover{transform:translateY(-1px)}
+.divider{text-align:center;color:#9CA3AF;font-size:13px;margin:20px 0}
+.login-link{text-align:center;font-size:13px;color:#6B7280}
+.login-link a{color:#185FA5;font-weight:600;text-decoration:none}
+.features{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:28px}
+.feature{display:flex;align-items:center;gap:7px;font-size:13px;color:#374151}
+.feature-dot{width:8px;height:8px;border-radius:50%;background:#185FA5;flex-shrink:0}
+</style>
+</head>
+<body>
+<div class="card" id="form-card">
+  <div class="logo">
+    <svg width="44" height="44" viewBox="0 0 44 44" fill="none"><circle cx="22" cy="22" r="22" fill="#0A1628"/><path d="M14 22C14 17.58 17.58 14 22 14C26.42 14 30 17.58 30 22" stroke="#1e6aff" stroke-width="2.5" stroke-linecap="round"/><path d="M22 30C26.42 30 30 26.42 30 22" stroke="#4DA3E8" stroke-width="2.5" stroke-linecap="round"/><circle cx="22" cy="22" r="3" fill="#1e6aff"/></svg>
+    <div>
+      <span class="logo-text">Mednow</span>
+      <span class="logo-sub">Scouting Volley</span>
+    </div>
+  </div>
+
+  <h1>Registra il tuo club</h1>
+  <p class="subtitle">Inizia subito — 30 giorni gratuiti, no carta di credito</p>
+
+  <div class="trial-badge">🎯 Trial gratuito 30 giorni incluso</div>
+
+  <div class="features">
+    <div class="feature"><div class="feature-dot"></div>Database atlete</div>
+    <div class="feature"><div class="feature-dot"></div>Roster interattivo</div>
+    <div class="feature"><div class="feature-dot"></div>Dashboard trattative</div>
+    <div class="feature"><div class="feature-dot"></div>Multi-utente</div>
+  </div>
+
+  <div class="error" id="error-msg"></div>
+
+  <form id="signup-form">
+    <div>
+      <div class="form-group">
+        <label>Nome club *</label>
+        <input type="text" id="club-nome" placeholder="es. ASD Milano Volley" required>
+      </div>
+<input type="hidden" id="sport" value="pallavolo">
+    </div>
+    <div class="form-group">
+      <label>Il tuo nome *</label>
+      <input type="text" id="nome" placeholder="Nome e cognome" required>
+    </div>
+    <div class="form-group">
+      <label>Email *</label>
+      <input type="email" id="email" placeholder="email@tuoclub.it" required>
+    </div>
+    <div class="form-group">
+      <label>Password *</label>
+      <input type="password" id="password" placeholder="Minimo 8 caratteri" minlength="8" required>
+    </div>
+    <button type="submit" class="btn" id="submit-btn">Crea il tuo account →</button>
+  </form>
+
+  <div class="divider">oppure</div>
+  <div class="login-link">Hai già un account? <a href="/">Accedi qui</a></div>
+</div>
+
+<div class="card success" id="success-card">
+  <div class="success-icon">🎉</div>
+  <h2>Club registrato!</h2>
+  <p>Il tuo spazio su Mednow Scouting è pronto.<br>Usa le credenziali qui sotto per accedere.</p>
+  <div class="creds">
+    <div class="creds-row">
+      <span class="creds-label">Club</span>
+      <span class="creds-val" id="cred-club">—</span>
+    </div>
+    <div class="creds-row">
+      <span class="creds-label">Email</span>
+      <span class="creds-val" id="cred-email">—</span>
+    </div>
+    <div class="creds-row">
+      <span class="creds-label">Password</span>
+      <span class="creds-val" id="cred-pwd">—</span>
+    </div>
+  </div>
+  <a href="/" class="btn-login">Accedi all'app →</a>
+  <p style="margin-top:16px;font-size:12px;color:#9CA3AF">Riceverai una email di conferma a breve.<br>Il tuo trial scade tra 30 giorni.</p>
+</div>
+
+<script>
+const SUPA = 'https://zaxbwqxnrofiggldoahw.supabase.co';
+const KEY = 'sb_publishable_aS4aRr3OMwWLOT1TmIhGPg_gfY-dwIO';
+
+document.getElementById('signup-form').addEventListener('submit', async function(e){
+  e.preventDefault();
+  const btn = document.getElementById('submit-btn');
+  const errEl = document.getElementById('error-msg');
+  errEl.style.display = 'none';
+
+  const clubNome = document.getElementById('club-nome').value.trim();
+  const sport = document.getElementById('sport').value;
+  const nome = document.getElementById('nome').value.trim();
+  const email = document.getElementById('email').value.trim().toLowerCase();
+  const password = document.getElementById('password').value;
+
+  if(!clubNome||!nome||!email||!password){
+    errEl.textContent='Compila tutti i campi obbligatori.';
+    errEl.style.display='block'; return;
+  }
+  if(password.length < 8){
+    errEl.textContent='La password deve avere almeno 8 caratteri.';
+    errEl.style.display='block'; return;
+  }
+
+  btn.disabled=true; btn.textContent='Creazione in corso...';
+
+  try{
+    // 1. Crea utente Supabase Auth
+    const authRes = await fetch(`${SUPA}/auth/v1/signup`,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','apikey':KEY},
+      body:JSON.stringify({email, password})
+    });
+    const authData = await authRes.json();
+
+    // Gestione errori specifici
+    if(!authRes.ok){
+      const msg = authData.msg||authData.message||authData.error_description||'';
+      if(authData.error_code==='over_email_send_rate_limit') throw new Error('Troppi tentativi — riprova tra qualche minuto.');
+      if(authData.error_code==='user_already_exists') throw new Error('Email già registrata. Accedi direttamente.');
+      if(authData.error_code==='email_address_invalid') throw new Error('Indirizzo email non valido.');
+      if(authData.error_code==='weak_password') throw new Error('Password troppo debole — usa almeno 8 caratteri.');
+      throw new Error(msg||'Errore durante la registrazione ('+authRes.status+')');
+    }
+    if(!authData.user) throw new Error('Registrazione non completata. Riprova.');
+
+    const userId = authData.user.id;
+    const accessToken = authData.access_token||authData.session?.access_token||KEY;
+
+    // 2. Crea club + utenti via RPC
+    const rpcRes = await fetch(`${SUPA}/rest/v1/rpc/create_club_signup`,{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'apikey':KEY,
+        'Authorization':`Bearer ${accessToken}`
+      },
+      body:JSON.stringify({
+        p_club_nome: clubNome,
+        p_sport: sport,
+        p_user_id: userId,
+        p_nome: nome,
+        p_email: email
+      })
+    });
+    const rpcBody = await rpcRes.text();
+    if(rpcRes.status >= 400){
+      throw new Error('Errore configurazione club — contatta il supporto.');
+    }
+
+    // 3. Mostra successo
+    document.getElementById('form-card').style.display='none';
+    const sc = document.getElementById('success-card');
+    sc.style.display='block';
+    document.getElementById('cred-club').textContent = clubNome;
+    document.getElementById('cred-email').textContent = email;
+    document.getElementById('cred-pwd').textContent = password;
+
+  } catch(err){
+    errEl.textContent = err.message||'Errore imprevisto. Riprova.';
+    errEl.style.display='block';
+    btn.disabled=false;
+    btn.textContent='Crea il tuo account →';
+  }
+});
+</script>
+</body>
+</html>
