@@ -448,6 +448,11 @@ td[title=""] { pointer-events: auto; }
 .ob-action-btn:hover{background:#BFDBFE}
 .ob-trial-bar{background:#EBF4FF;border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;margin-bottom:20px;font-size:13px;color:#185FA5;font-weight:600}
 
+
+.manage-sub-btn{display:none;align-items:center;gap:6px;padding:7px 14px;background:rgba(93,202,165,0.15);border:1px solid rgba(93,202,165,0.3);color:#5DCAA5;border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+.manage-sub-btn:hover{background:rgba(93,202,165,0.25)}
+.manage-sub-btn.visible{display:flex}
+
 </style>
 
 <style id="court-override">
@@ -1146,7 +1151,7 @@ async function doLogin(){
   }catch(e){err.textContent='Errore: '+e.message;err.classList.add('show');btn.disabled=false;btn.textContent='Accedi';}
 }
 
-function startApp(){checkPaymentReturn();setTimeout(checkTrialStatus,1000);setTimeout(checkOnboarding,2000);
+function startApp(){checkPaymentReturn();setTimeout(checkTrialStatus,1000);setTimeout(checkOnboarding,2000);setTimeout(checkSubscriptionButton,1200);
   document.getElementById('login-screen').style.display='none';
   document.getElementById('app-screen').style.display='block';
   renderUserBadge();renderAdminActions();renderAddCard();
@@ -2380,6 +2385,39 @@ function startNotifPolling(){
   setInterval(loadNotifications, 60000);
 }
 
+
+
+// ── STRIPE CUSTOMER PORTAL ──
+async function openCustomerPortal() {
+  const btn = document.getElementById('manage-sub-btn');
+  if (btn) { btn.textContent = '⏳ Reindirizzamento...'; btn.disabled = true; }
+  try {
+    const r = await fetch('/.netlify/functions/create-portal', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ club_id: currentProfile?.club_id })
+    });
+    const data = await r.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      showToast('Nessun abbonamento attivo', 'error');
+      if (btn) { btn.textContent = '💳 Gestisci abbonamento'; btn.disabled = false; }
+    }
+  } catch(e) {
+    showToast('Errore: ' + e.message, 'error');
+    if (btn) { btn.textContent = '💳 Gestisci abbonamento'; btn.disabled = false; }
+  }
+}
+
+function checkSubscriptionButton() {
+  const btn = document.getElementById('manage-sub-btn');
+  if (!btn || !currentProfile) return;
+  // Mostra solo per club con abbonamento attivo (non trial, non club_id=1)
+  if (currentProfile.club_id !== 1 && ['starter','club'].includes(currentProfile.piano)) {
+    btn.classList.add('visible');
+  }
+}
 
 // ── ONBOARDING ──
 const OB_STEPS = [
