@@ -24,7 +24,7 @@ exports.handler = async (event) => {
     <h1 style="font-size:26px;font-weight:800;color:#0A1628;margin:0 0 8px">Benvenuto in Mednow Scouting!</h1>
     <p style="font-size:15px;color:#6B7280;line-height:1.6;margin:0 0 28px">
       Il tuo spazio per <strong>${club_nome}</strong> e' pronto. 
-      Hai <strong>30 giorni gratuiti</strong> per esplorare tutte le funzionalita'.
+      Hai <strong>7 giorni gratuiti</strong> per esplorare tutte le funzionalita'.
     </p>
     <div style="background:#F0F7FF;border:1px solid #BFDBFE;border-radius:10px;padding:20px;margin-bottom:28px">
       <div style="font-size:11px;font-weight:700;color:#185FA5;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px">Le tue credenziali</div>
