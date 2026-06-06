@@ -757,7 +757,7 @@ td[title=""] { pointer-events: auto; }
         <label><input type="checkbox" value="in_prova" onchange="renderTable();updateMultiFilterLabel('status')"> In prova Club B</label>
         <label><input type="checkbox" value="visione" onchange="renderTable();updateMultiFilterLabel('status')"> Visionata</label>
         <label><input type="checkbox" value="non_confermata" onchange="renderTable();updateMultiFilterLabel('status')"> Non confermata</label>
-        <label><input type="checkbox" value="trasferita_aspes" onchange="renderTable();updateMultiFilterLabel('status')"> Trasferita Club B</label>
+        <label><input type="checkbox" value="trasferita_aspes" onchange="renderTable();updateMultiFilterLabel('status')"> Trasferita</label>
         <label><input type="checkbox" value="lista" onchange="renderTable();updateMultiFilterLabel('status')"> In lista</label>
         <label><input type="checkbox" value="no" onchange="renderTable();updateMultiFilterLabel('status')"> No</label>
       </div>
@@ -777,17 +777,9 @@ td[title=""] { pointer-events: auto; }
       <button type="button" class="multi-filter-btn" onclick="toggleMultiFilter('agente')" id="btn-multi-agente">Tutti gli agenti <span style="font-size:10px">&#x25BC;</span></button>
       <div class="multi-filter-dropdown" id="dd-agente">
         <label><input type="checkbox" value="" onchange="renderTable();updateMultiFilterLabel('agente')"> Club B</label>
-        <label><input type="checkbox" value="Paolo Buongiorno" onchange="renderTable();updateMultiFilterLabel('agente')"> Paolo Buongiorno</label>
-        <label><input type="checkbox" value="Gaia Genovesi" onchange="renderTable();updateMultiFilterLabel('agente')"> Gaia Genovesi</label>
-        <label><input type="checkbox" value="Filippo Nicastro" onchange="renderTable();updateMultiFilterLabel('agente')"> Filippo Nicastro</label>
         <label><input type="checkbox" value="Gold Sport - Donato Saltini" onchange="renderTable();updateMultiFilterLabel('agente')"> Gold Sport - Donato Saltini</label>
-        <label><input type="checkbox" value="Stefano Borla" onchange="renderTable();updateMultiFilterLabel('agente')"> Stefano Borla</label>
-        <label><input type="checkbox" value="Vannoni" onchange="renderTable();updateMultiFilterLabel('agente')"> Vannoni</label>
-        <label><input type="checkbox" value="Giugni" onchange="renderTable();updateMultiFilterLabel('agente')"> Giugni</label>
         <label><input type="checkbox" value="Squadre Regionali" onchange="renderTable();updateMultiFilterLabel('agente')"> Squadre Regionali</label>
-        <label><input type="checkbox" value="Selezione Territoriale MML" onchange="renderTable();updateMultiFilterLabel('agente')"> Selezione Territoriale MML</label>
         <label><input type="checkbox" value="Open Day" onchange="renderTable();updateMultiFilterLabel('agente')"> Open Day</label>
-        <label><input type="checkbox" value="Open Day 30 Maggio" onchange="renderTable();updateMultiFilterLabel('agente')"> Open Day 30 Maggio</label>
         <label><input type="checkbox" value="Senza agente" onchange="renderTable();updateMultiFilterLabel('agente')"> Senza agente</label>
       </div>
     </div>
@@ -925,7 +917,7 @@ td[title=""] { pointer-events: auto; }
           <option value="nuovo_acquisto">Nuovo acquisto</option>
           <option value="confermata">Confermata</option>
           <option value="non_confermata">Non confermata</option>
-          <option value="trasferita_aspes">Trasferita Club B</option>
+          <option value="trasferita_aspes">Trasferita</option>
           <option value="no">No</option>
         </select>
       </div>
@@ -947,17 +939,9 @@ td[title=""] { pointer-events: auto; }
       <select id="edit-agente">
         <option value="">-- Nessun agente --</option>
         <option>Club B</option>
-        <option>Paolo Buongiorno</option>
-        <option>Gaia Genovesi</option>
-        <option>Filippo Nicastro</option>
         <option>Gold Sport - Donato Saltini</option>
-        <option>Stefano Borla</option>
-        <option>Vannoni</option>
-        <option>Giugni</option>
         <option>Squadre Regionali</option>
-        <option>Selezione Territoriale MML</option>
         <option>Open Day</option>
-        <option>Open Day 30 Maggio</option>
         <option>Senza agente</option>
       </select>
     </div>
@@ -1059,7 +1043,7 @@ const SUPA='https://zaxbwqxnrofiggldoahw.supabase.co';
 const KEY='sb_publishable_aS4aRr3OMwWLOT1TmIhGPg_gfY-dwIO';
 let currentUser=null,currentProfile=null,athletes=[],page=0,currentSort='priority',poolFilter='all';
 const PER_PAGE=30;
-const SL={nuovo_acquisto:'Nuovo acquisto',confermata:'Confermata',in_prova:'In prova Club B',non_confermata:'Non confermata',trasferita_aspes:'Trasferita Club B',visione:'Visionata',lista:'In lista',trattativa:'In trattativa',no:'No'};
+const SL={nuovo_acquisto:'Nuovo acquisto',confermata:'Confermata',in_prova:'In prova Club B',non_confermata:'Non confermata',trasferita_aspes:'Trasferita',visione:'Visionata',lista:'In lista',trattativa:'In trattativa',no:'No'};
 const SC={nuovo_acquisto:'s-nuovo-acquisto',confermata:'s-confermata',in_prova:'s-in-prova',non_confermata:'s-non-confermata',trasferita_aspes:'s-trasferita',visione:'s-visione',lista:'s-lista',trattativa:'s-trattativa',no:'s-no'};
 const CYCLE=['lista','visione','in_prova','trattativa','nuovo_acquisto','confermata','non_confermata','trasferita_aspes','no'];
 const CONFIRMED=['nuovo_acquisto','confermata'];
@@ -1279,19 +1263,12 @@ function renderAddCard(){
           <option value="confermata">Confermata</option><option value="no">No</option>
         </select></div>
       <div class="field-wrap"><div class="field-label">Agente</div><select id="a-agente" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;background:var(--bg-card);color:var(--text)">
-          <option value="">-- Seleziona agente --</option>
-          <option value="">Club B</option>
-          <option value="Paolo Buongiorno">Paolo Buongiorno</option>
-          <option value="Gaia Genovesi">Gaia Genovesi</option>
-          <option value="Filippo Nicastro">Filippo Nicastro</option>
-          <option value="Gold Sport - Donato Saltini">Gold Sport - Donato Saltini</option>
-          <option value="Stefano Borla">Stefano Borla</option>
-          <option value="Vannoni">Vannoni</option>
-          <option value="Giugni">Giugni</option>
-          <option value="Squadre Regionali">Squadre Regionali</option>
-          <option value="Selezione Territoriale MML">Selezione Territoriale MML</option>
-          <option value="Open Day">Open Day</option>
+          <option value="">Seleziona agente</option>
           <option value="Senza agente">Senza agente</option>
+          <option value="Squadre Regionali">Squadre Regionali</option>
+          <option value="Selezione Territoriale">Selezione Territoriale</option>
+          <option value="Open Day">Open Day</option>
+          <option value="Altro">Altro</option>
         </select></div>
     </div>
     <div style="margin-bottom:10px"><div class="field-label" style="margin-bottom:4px">Note</div>
@@ -1755,7 +1732,7 @@ function removePhoto(){
 }
 
 const CAMPO_LABELS={status:'Stato',rating:'Voto',note:'Note',dest:'Squadra dest.',ruolo:'Ruolo',pct:'% trattativa',telefono:'Telefono',agente:'Agente',societa:'Società',anno:'Anno',cognome:'Cognome',nome:'Nome'};
-const STATUS_LABELS={nuovo_acquisto:'Nuovo acquisto',confermata:'Confermata',in_prova:'In prova Club B',trattativa:'In trattativa',visione:'Visionata',non_confermata:'Non confermata',trasferita_aspes:'Trasferita Club B',lista:'In lista',no:'No'};
+const STATUS_LABELS={nuovo_acquisto:'Nuovo acquisto',confermata:'Confermata',in_prova:'In prova Club B',trattativa:'In trattativa',visione:'Visionata',non_confermata:'Non confermata',trasferita_aspes:'Trasferita',lista:'In lista',no:'No'};
 async function saveLog(atletaId,atletaNome,campiCambiati){
   if(!campiCambiati.length)return;
   const logs=campiCambiati.map(c=>({atleta_id:atletaId,atleta_nome:atletaNome,utente_id:currentUser?.user?.id||null,utente_nome:currentProfile?.nome||currentUser?.user?.email||'?',club_id:currentProfile?.club_id||1,campo:c.campo,valore_prima:c.prima,valore_dopo:c.dopo,created_at:Date.now()}));
@@ -2076,9 +2053,9 @@ function renderCourt(titolariSlots,r){
 
 function selectSquad(sid){currentSquad=sid;renderSquadTabs();renderRoster();}
 function getSiblingSquadId(squadId){
-  // Trova il gruppo gemello: A↔B
-  if(squadId.endsWith('a'))return squadId.slice(0,-1)+'b';
+  // A↔B sibling logic
   if(squadId.endsWith('b'))return squadId.slice(0,-1)+'a';
+  if(squadId.endsWith('a')){const b=squadId.slice(0,-1)+'b';return b;}
   return null;
 }
 function getAssignedIds(){
