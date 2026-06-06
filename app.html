@@ -1323,7 +1323,7 @@ function setSyncPill(s,t){const p=document.getElementById('sync-pill');p.classNa
 function dbToApp(r){return{id:r.id,cognome:r.cognome,nome:r.nome,anno:r.anno||'',ruolo:r.ruolo||'',societa:r.societa||'',status:r.status||'lista',agente:r.agente||'',note:r.note||'',dest:r.dest||'',rating:r.rating||0,pct:r.pct||50,telefono:r.telefono||'',foto:r.foto||null,createdAt:r.created_at||0,updatedAt:r.updated_at||0};}
 function appToDB(a){return{id:a.id,cognome:a.cognome,nome:a.nome,anno:a.anno,ruolo:a.ruolo||null,societa:a.societa||null,status:a.status||'lista',agente:a.agente||null,note:a.note||null,dest:a.dest||null,telefono:a.telefono||null,rating:a.rating||0,pct:a.pct||50,created_at:a.createdAt||Date.now(),updated_at:Date.now()};}
 
-async async function saveAthlete(a){
+async function saveAthlete(a){
   a.updatedAt=Date.now();
   const payload=appToDB(a);
   try{
