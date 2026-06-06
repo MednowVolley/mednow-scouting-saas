@@ -1323,7 +1323,7 @@ function setSyncPill(s,t){const p=document.getElementById('sync-pill');p.classNa
 function dbToApp(r){return{id:r.id,cognome:r.cognome,nome:r.nome,anno:r.anno||'',ruolo:r.ruolo||'',societa:r.societa||'',status:r.status||'lista',agente:r.agente||'',note:r.note||'',dest:r.dest||'',rating:r.rating||0,pct:r.pct||50,telefono:r.telefono||'',foto:r.foto||null,createdAt:r.created_at||0,updatedAt:r.updated_at||0};}
 function appToDB(a){return{id:a.id,cognome:a.cognome,nome:a.nome,anno:a.anno,ruolo:a.ruolo||null,societa:a.societa||null,status:a.status||'lista',agente:a.agente||null,note:a.note||null,dest:a.dest||null,telefono:a.telefono||null,rating:a.rating||0,pct:a.pct||50,created_at:a.createdAt||Date.now(),updated_at:Date.now()};}
 
-async function saveAthlete(a){
+async async function saveAthlete(a){
   a.updatedAt=Date.now();
   const payload=appToDB(a);
   try{
@@ -2396,15 +2396,15 @@ function startNotifPolling(){
 
 
 // ── CLUB SETTINGS ──
-let clubSettings = { agenti: [], squads: [] };
+let clubSettings = { agenti: ['Senza agente','Squadre Regionali','Open Day'], squads: [] };
 let settingsCurrentTab = 'squads';
 
 async function loadClubSettings() {
   if (!currentProfile || currentProfile.club_id === 1) return; // Mednow usa SQUADS hardcoded
   try {
     const resp = await fetch(
-      window.SUPA_URL + '/rest/v1/clubs?id=eq.' + currentProfile.club_id + '&select=settings',
-      { headers: { 'apikey': window.SUPA_KEY, 'Authorization': 'Bearer ' + (currentUser?.access_token || window.SUPA_KEY) } }
+      SUPA + '/rest/v1/clubs?id=eq.' + currentProfile.club_id + '&select=settings',
+      { headers: { 'apikey': KEY, 'Authorization': 'Bearer ' + (currentUser?.access_token || KEY) } }
     );
     if (!resp.ok) return;
     const data = await resp.json();
@@ -2481,12 +2481,12 @@ async function saveSettings() {
   btn.disabled = true;
   try {
     const resp = await fetch(
-      window.SUPA_URL + '/rest/v1/clubs?id=eq.' + currentProfile.club_id,
+      SUPA + '/rest/v1/clubs?id=eq.' + currentProfile.club_id,
       {
         method: 'PATCH',
         headers: {
-          'apikey': window.SUPA_KEY,
-          'Authorization': 'Bearer ' + (currentUser?.access_token || window.SUPA_KEY),
+          'apikey': KEY,
+          'Authorization': 'Bearer ' + (currentUser?.access_token || KEY),
           'Content-Type': 'application/json',
           'Prefer': 'return=minimal'
         },
