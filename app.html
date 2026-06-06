@@ -1520,7 +1520,8 @@ async function delAthlete(id){
 }
 
 function openDrawer(id){
-  const a=athletes.find(x=>x.id===id);if(!a)return;
+  try{
+  const a=athletes.find(x=>x.id===id);if(!a){showToast('Atleta non trovata id='+id,'error');return;}
   if(!canEditAthlete(a)){showToast('Puoi visualizzare ma non modificare questa atleta','error');}
   document.getElementById('edit-id').value=id;
   document.getElementById('drawer-name').textContent=a.cognome+' '+a.nome;
@@ -1581,6 +1582,7 @@ function openDrawer(id){
   document.getElementById('edit-drawer').classList.add('open');
   document.getElementById('drawer-overlay').classList.add('open');
   document.body.style.overflow='hidden';
+  }catch(err){showToast('ERRORE DRAWER: '+err.message,'error');console.error('openDrawer crash:',err);}
 }
 
 function closeDrawer(){document.getElementById('edit-drawer').classList.remove('open');document.getElementById('drawer-overlay').classList.remove('open');document.body.style.overflow='';}
