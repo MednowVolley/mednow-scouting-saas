@@ -1577,7 +1577,7 @@ function openDrawer(id){
     telInput.value=a.telefono||'';
     document.getElementById('btn-whatsapp').style.display=a.telefono?'flex':'none';
   }
-  document.getElementById('btn-del-drawer').style.display=canDelete()?'':'none';
+  const _delB=document.getElementById('btn-del-drawer');if(_delB)_delB.style.display=canDelete()?'':'none';
   document.getElementById('edit-drawer').classList.add('open');
   document.getElementById('drawer-overlay').classList.add('open');
   document.body.style.overflow='hidden';
