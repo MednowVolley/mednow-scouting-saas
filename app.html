@@ -1019,7 +1019,16 @@ td[title=""] { pointer-events: auto; }
       </div>
     </div>
   </div>
-  <div class="drawer-footer">
+  
+    <div class="drawer-field" id="pct-field" style="display:none;flex-direction:column">
+      <label>Probabilità conferma (%)</label>
+      <input type="range" id="edit-pct" min="0" max="100" value="50" oninput="updatePctPreview(this.value)">
+      <span id="pct-preview">50%</span>
+    </div>
+    <div class="drawer-field" id="storico-content" style="display:none"></div>
+    <div class="drawer-field" id="todo-body" style="display:none"></div>
+    <span id="todo-toggle-icon" style="display:none"></span>
+<div class="drawer-footer">
     <button class="btn-cancel" onclick="closeDrawer()">Annulla</button>
     <button class="btn-del-drawer" id="btn-del-drawer" onclick="deleteFromDrawer()">&#x1F5D1;</button>
     <button class="btn-save" onclick="saveDrawer()">&#x2713; Salva</button>
