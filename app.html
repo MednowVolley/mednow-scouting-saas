@@ -621,18 +621,20 @@ td[title=""] { pointer-events: auto; }
 </div>
 
 
-<datalist id="dl-societa"></datalist>
+<datalist id="dl-societa">
+  <option value="Esterna">
+</datalist>
 <datalist id="dl-dest">
-  <option>U.19 Ecc. ProPatria</option><option>U.17 Ecc. ProPatria</option>
-  <option>U.15 Ecc. ProPatria</option><option>U.14 Ecc. ProPatria</option>
-  <option>U.13 Ecc. ProPatria</option><option>U.12A ProPatria</option>
-  <option>U.12B ProPatria</option><option>U.15B ProPatria</option>
-  <option>U.14B ProPatria</option><option>U.13B ProPatria</option>
-  <option>U.19A Aspes</option><option>U.17A Aspes</option>
-  <option>U.17B Aspes</option>
-  <option>U.15A Aspes</option><option>U.14A Aspes</option>
-  <option>U.13A Aspes</option><option>U.12A Aspes</option>
-  <option>U.12B Aspes</option><option>PGS</option>
+  <option>U.19 Ecc. Club A</option><option>U.17 Ecc. Club A</option>
+  <option>U.15 Ecc. Club A</option><option>U.14 Ecc. Club A</option>
+  <option>U.13 Ecc. Club A</option><option>U.12A Club A</option>
+  <option>U.12B Club A</option><option>U.15B Club A</option>
+  <option>U.14B Club A</option><option>U.13B Club A</option>
+  <option>U.19A Club B</option><option>U.17A Club B</option>
+  <option>U.17B Club B</option>
+  <option>U.15A Club B</option><option>U.14A Club B</option>
+  <option>U.13A Club B</option><option>U.12A Club B</option>
+  <option>U.12B Club B</option><option>PGS</option>
 </datalist>
 
 <!-- LOGIN -->
@@ -752,10 +754,10 @@ td[title=""] { pointer-events: auto; }
         <label><input type="checkbox" value="nuovo_acquisto" onchange="renderTable();updateMultiFilterLabel('status')"> Nuovo acquisto</label>
         <label><input type="checkbox" value="confermata" onchange="renderTable();updateMultiFilterLabel('status')"> Confermata</label>
         <label><input type="checkbox" value="trattativa" onchange="renderTable();updateMultiFilterLabel('status')"> In trattativa</label>
-        <label><input type="checkbox" value="in_prova" onchange="renderTable();updateMultiFilterLabel('status')"> In prova Aspes</label>
+        <label><input type="checkbox" value="in_prova" onchange="renderTable();updateMultiFilterLabel('status')"> In prova Club B</label>
         <label><input type="checkbox" value="visione" onchange="renderTable();updateMultiFilterLabel('status')"> Visionata</label>
         <label><input type="checkbox" value="non_confermata" onchange="renderTable();updateMultiFilterLabel('status')"> Non confermata</label>
-        <label><input type="checkbox" value="trasferita_aspes" onchange="renderTable();updateMultiFilterLabel('status')"> Trasferita Aspes</label>
+        <label><input type="checkbox" value="trasferita_aspes" onchange="renderTable();updateMultiFilterLabel('status')"> Trasferita Club B</label>
         <label><input type="checkbox" value="lista" onchange="renderTable();updateMultiFilterLabel('status')"> In lista</label>
         <label><input type="checkbox" value="no" onchange="renderTable();updateMultiFilterLabel('status')"> No</label>
       </div>
@@ -774,7 +776,7 @@ td[title=""] { pointer-events: auto; }
     <div class="multi-filter-wrap">
       <button type="button" class="multi-filter-btn" onclick="toggleMultiFilter('agente')" id="btn-multi-agente">Tutti gli agenti <span style="font-size:10px">&#x25BC;</span></button>
       <div class="multi-filter-dropdown" id="dd-agente">
-        <label><input type="checkbox" value="Aspes" onchange="renderTable();updateMultiFilterLabel('agente')"> Aspes</label>
+        <label><input type="checkbox" value="" onchange="renderTable();updateMultiFilterLabel('agente')"> Club B</label>
         <label><input type="checkbox" value="Paolo Buongiorno" onchange="renderTable();updateMultiFilterLabel('agente')"> Paolo Buongiorno</label>
         <label><input type="checkbox" value="Gaia Genovesi" onchange="renderTable();updateMultiFilterLabel('agente')"> Gaia Genovesi</label>
         <label><input type="checkbox" value="Filippo Nicastro" onchange="renderTable();updateMultiFilterLabel('agente')"> Filippo Nicastro</label>
@@ -792,22 +794,22 @@ td[title=""] { pointer-events: auto; }
     <div class="multi-filter-wrap">
       <button type="button" class="multi-filter-btn" onclick="toggleMultiFilter('dest')" id="btn-multi-dest">Tutte le squadre <span style="font-size:10px">&#x25BC;</span></button>
       <div class="multi-filter-dropdown" id="dd-dest">
-        <label><input type="checkbox" value="U.19 Ecc. ProPatria" onchange="renderTable();updateMultiFilterLabel('dest')"> U.19 Ecc. ProPatria</label>
-        <label><input type="checkbox" value="U.17 Ecc. ProPatria" onchange="renderTable();updateMultiFilterLabel('dest')"> U.17 Ecc. ProPatria</label>
-        <label><input type="checkbox" value="U.15 Ecc. ProPatria" onchange="renderTable();updateMultiFilterLabel('dest')"> U.15 Ecc. ProPatria</label>
-        <label><input type="checkbox" value="U.14 Ecc. ProPatria" onchange="renderTable();updateMultiFilterLabel('dest')"> U.14 Ecc. ProPatria</label>
-        <label><input type="checkbox" value="U.13 Ecc. ProPatria" onchange="renderTable();updateMultiFilterLabel('dest')"> U.13 Ecc. ProPatria</label>
-        <label><input type="checkbox" value="U.12A ProPatria" onchange="renderTable();updateMultiFilterLabel('dest')"> U.12A ProPatria</label>
-        <label><input type="checkbox" value="U.12B ProPatria" onchange="renderTable();updateMultiFilterLabel('dest')"> U.12B ProPatria</label>
-        <label><input type="checkbox" value="U19A Aspes" onchange="renderTable();updateMultiFilterLabel('dest')"> U19A Aspes</label>
-        <label><input type="checkbox" value="U17A Aspes" onchange="renderTable();updateMultiFilterLabel('dest')"> U17A Aspes</label>
-        <label><input type="checkbox" value="U17B Aspes" onchange="renderTable();updateMultiFilterLabel('dest')"> U17B Aspes</label>
-        <label><input type="checkbox" value="U15A Aspes" onchange="renderTable();updateMultiFilterLabel('dest')"> U15A Aspes</label>
-        <label><input type="checkbox" value="U15B Aspes" onchange="renderTable();updateMultiFilterLabel('dest')"> U15B Aspes</label>
-        <label><input type="checkbox" value="U14A Aspes" onchange="renderTable();updateMultiFilterLabel('dest')"> U14A Aspes</label>
-        <label><input type="checkbox" value="U14B Aspes" onchange="renderTable();updateMultiFilterLabel('dest')"> U14B Aspes</label>
-        <label><input type="checkbox" value="U13A Aspes" onchange="renderTable();updateMultiFilterLabel('dest')"> U13A Aspes</label>
-        <label><input type="checkbox" value="U13B Aspes" onchange="renderTable();updateMultiFilterLabel('dest')"> U13B Aspes</label>
+        <label><input type="checkbox" value="U.19 Ecc. Club A" onchange="renderTable();updateMultiFilterLabel('dest')"> U.19 Ecc. Club A</label>
+        <label><input type="checkbox" value="U.17 Ecc. Club A" onchange="renderTable();updateMultiFilterLabel('dest')"> U.17 Ecc. Club A</label>
+        <label><input type="checkbox" value="U.15 Ecc. Club A" onchange="renderTable();updateMultiFilterLabel('dest')"> U.15 Ecc. Club A</label>
+        <label><input type="checkbox" value="U.14 Ecc. Club A" onchange="renderTable();updateMultiFilterLabel('dest')"> U.14 Ecc. Club A</label>
+        <label><input type="checkbox" value="U.13 Ecc. Club A" onchange="renderTable();updateMultiFilterLabel('dest')"> U.13 Ecc. Club A</label>
+        <label><input type="checkbox" value="U.12A Club A" onchange="renderTable();updateMultiFilterLabel('dest')"> U.12A Club A</label>
+        <label><input type="checkbox" value="U.12B Club A" onchange="renderTable();updateMultiFilterLabel('dest')"> U.12B Club A</label>
+        <label><input type="checkbox" value="U19A Club B" onchange="renderTable();updateMultiFilterLabel('dest')"> U19A Club B</label>
+        <label><input type="checkbox" value="U17A Club B" onchange="renderTable();updateMultiFilterLabel('dest')"> U17A Club B</label>
+        <label><input type="checkbox" value="U17B Club B" onchange="renderTable();updateMultiFilterLabel('dest')"> U17B Club B</label>
+        <label><input type="checkbox" value="U15A Club B" onchange="renderTable();updateMultiFilterLabel('dest')"> U15A Club B</label>
+        <label><input type="checkbox" value="U15B Club B" onchange="renderTable();updateMultiFilterLabel('dest')"> U15B Club B</label>
+        <label><input type="checkbox" value="U14A Club B" onchange="renderTable();updateMultiFilterLabel('dest')"> U14A Club B</label>
+        <label><input type="checkbox" value="U14B Club B" onchange="renderTable();updateMultiFilterLabel('dest')"> U14B Club B</label>
+        <label><input type="checkbox" value="U13A Club B" onchange="renderTable();updateMultiFilterLabel('dest')"> U13A Club B</label>
+        <label><input type="checkbox" value="U13B Club B" onchange="renderTable();updateMultiFilterLabel('dest')"> U13B Club B</label>
       </div>
     </div>
     <button class="btn-reset" onclick="resetFilters()">&#x2715; Reset</button>
@@ -847,7 +849,7 @@ td[title=""] { pointer-events: auto; }
   <div class="squad-tabs" id="squad-tabs"></div>
   <div id="roster-readonly-banner" style="display:none;align-items:center;gap:10px;background:#FEF3C7;border:1px solid #F59E0B;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;color:#92400E">
     <span style="font-size:16px">&#x1F512;</span>
-    <span><b>Sola lettura</b> — Solo l'Admin può modificare i roster ProPatria. Puoi consultare il sestetto ma non modificarlo.</span>
+    <span><b>Sola lettura</b> — Solo l'Admin può modificare i roster Club A. Puoi consultare il sestetto ma non modificarlo.</span>
   </div>
   <div class="roster-grid-wrap" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;align-items:start;width:100%">
     <!-- COLONNA SINISTRA: solo campo -->
@@ -918,12 +920,12 @@ td[title=""] { pointer-events: auto; }
         <select id="edit-status">
           <option value="lista">In lista</option>
           <option value="visione">Visionata</option>
-      <option value="in_prova">In prova Aspes</option>
+      <option value="in_prova">In prova Club B</option>
           <option value="trattativa">In trattativa</option>
           <option value="nuovo_acquisto">Nuovo acquisto</option>
           <option value="confermata">Confermata</option>
           <option value="non_confermata">Non confermata</option>
-          <option value="trasferita_aspes">Trasferita Aspes</option>
+          <option value="trasferita_aspes">Trasferita Club B</option>
           <option value="no">No</option>
         </select>
       </div>
@@ -944,7 +946,7 @@ td[title=""] { pointer-events: auto; }
       <label>Agente / Fonte</label>
       <select id="edit-agente">
         <option value="">-- Nessun agente --</option>
-        <option>Aspes</option>
+        <option>Club B</option>
         <option>Paolo Buongiorno</option>
         <option>Gaia Genovesi</option>
         <option>Filippo Nicastro</option>
@@ -962,22 +964,22 @@ td[title=""] { pointer-events: auto; }
     <div class="drawer-field">
       <label>Squadra destinazione (multipla)</label>
       <div id="edit-dest-checks" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:4px">
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U.19 Ecc. ProPatria" onchange="updateDestPreview()"> U.19 Ecc. ProPatria</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U.17 Ecc. ProPatria" onchange="updateDestPreview()"> U.17 Ecc. ProPatria</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U.15 Ecc. ProPatria" onchange="updateDestPreview()"> U.15 Ecc. ProPatria</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U.14 Ecc. ProPatria" onchange="updateDestPreview()"> U.14 Ecc. ProPatria</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U.13 Ecc. ProPatria" onchange="updateDestPreview()"> U.13 Ecc. ProPatria</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U.12A ProPatria" onchange="updateDestPreview()"> U.12A ProPatria</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U.12B ProPatria" onchange="updateDestPreview()"> U.12B ProPatria</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U19A Aspes" onchange="updateDestPreview()"> U19A Aspes</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U17A Aspes" onchange="updateDestPreview()"> U17A Aspes</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U17B Aspes" onchange="updateDestPreview()"> U17B Aspes</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U15A Aspes" onchange="updateDestPreview()"> U15A Aspes</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U15B Aspes" onchange="updateDestPreview()"> U15B Aspes</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U14A Aspes" onchange="updateDestPreview()"> U14A Aspes</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U14B Aspes" onchange="updateDestPreview()"> U14B Aspes</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U13A Aspes" onchange="updateDestPreview()"> U13A Aspes</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U13B Aspes" onchange="updateDestPreview()"> U13B Aspes</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U.19 Ecc. Club A" onchange="updateDestPreview()"> U.19 Ecc. Club A</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U.17 Ecc. Club A" onchange="updateDestPreview()"> U.17 Ecc. Club A</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U.15 Ecc. Club A" onchange="updateDestPreview()"> U.15 Ecc. Club A</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U.14 Ecc. Club A" onchange="updateDestPreview()"> U.14 Ecc. Club A</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U.13 Ecc. Club A" onchange="updateDestPreview()"> U.13 Ecc. Club A</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U.12A Club A" onchange="updateDestPreview()"> U.12A Club A</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U.12B Club A" onchange="updateDestPreview()"> U.12B Club A</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U19A Club B" onchange="updateDestPreview()"> U19A Club B</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U17A Club B" onchange="updateDestPreview()"> U17A Club B</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U17B Club B" onchange="updateDestPreview()"> U17B Club B</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U15A Club B" onchange="updateDestPreview()"> U15A Club B</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U15B Club B" onchange="updateDestPreview()"> U15B Club B</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U14A Club B" onchange="updateDestPreview()"> U14A Club B</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U14B Club B" onchange="updateDestPreview()"> U14B Club B</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U13A Club B" onchange="updateDestPreview()"> U13A Club B</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U13B Club B" onchange="updateDestPreview()"> U13B Club B</label>
         <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="PGS" onchange="updateDestPreview()"> PGS</label>
       </div>
     </div>
@@ -1037,7 +1039,7 @@ td[title=""] { pointer-events: auto; }
           <div><div class="field-label" style="font-size:10px;color:var(--text-ter);margin-bottom:4px;font-weight:700;text-transform:uppercase">Ruolo</div>
             <select id="u-ruolo"><option value="dirigente">Dirigente</option><option value="allenatore">Allenatore</option><option value="reclutatore">Reclutatore</option><option value="scouting">Scouting</option><option value="admin">Admin</option></select></div>
           <div><div class="field-label" style="font-size:10px;color:var(--text-ter);margin-bottom:4px;font-weight:700;text-transform:uppercase">Societa</div>
-            <select id="u-societa"><option value="">— Tutte —</option><option value="ProPatria">ProPatria</option><option value="Aspes">Aspes</option><option value="PGS">PGS</option></select></div>
+            <select id="u-societa"><option value="">— Tutte —</option><option value="">Club A</option><option value="">Club B</option><option value="PGS">PGS</option></select></div>
         </div>
         <button class="btn-add-user" onclick="addUser()">+ Crea utente</button>
       </div>
@@ -1047,7 +1049,7 @@ td[title=""] { pointer-events: auto; }
 
 </div>
 
-<div class="page-footer"><strong>MEDNOW VOLLEY</strong> · Database Scouting · mednowscoutingvolley.com · Stagione 2026/27</div>
+<div class="page-footer"><strong>MEDNOW VOLLEY</strong> · Database Scouting · mednowscouting.it · Stagione 2026/27</div>
 
 <script>
 window.SUPA_URL='https://zaxbwqxnrofiggldoahw.supabase.co';
@@ -1057,7 +1059,7 @@ const SUPA='https://zaxbwqxnrofiggldoahw.supabase.co';
 const KEY='sb_publishable_aS4aRr3OMwWLOT1TmIhGPg_gfY-dwIO';
 let currentUser=null,currentProfile=null,athletes=[],page=0,currentSort='priority',poolFilter='all';
 const PER_PAGE=30;
-const SL={nuovo_acquisto:'Nuovo acquisto',confermata:'Confermata',in_prova:'In prova Aspes',non_confermata:'Non confermata',trasferita_aspes:'Trasferita Aspes',visione:'Visionata',lista:'In lista',trattativa:'In trattativa',no:'No'};
+const SL={nuovo_acquisto:'Nuovo acquisto',confermata:'Confermata',in_prova:'In prova Club B',non_confermata:'Non confermata',trasferita_aspes:'Trasferita Club B',visione:'Visionata',lista:'In lista',trattativa:'In trattativa',no:'No'};
 const SC={nuovo_acquisto:'s-nuovo-acquisto',confermata:'s-confermata',in_prova:'s-in-prova',non_confermata:'s-non-confermata',trasferita_aspes:'s-trasferita',visione:'s-visione',lista:'s-lista',trattativa:'s-trattativa',no:'s-no'};
 const CYCLE=['lista','visione','in_prova','trattativa','nuovo_acquisto','confermata','non_confermata','trasferita_aspes','no'];
 const CONFIRMED=['nuovo_acquisto','confermata'];
@@ -1222,7 +1224,7 @@ function isMyClubAthlete(a){
   // Se è admin della propria società, vede anche chi sta valutando
   return false;
 }
-// AGGIUNGERE atlete: admin + ruoli Aspes
+// AGGIUNGERE atlete: admin + ruoli Club B
 function canAdd(){return['admin','allenatore','dirigente','reclutatore','scouting'].includes(currentProfile?.ruolo);}
 // MODIFICARE atleta: admin sempre; utenti club solo le proprie
 function canEditAthlete(a){
@@ -1230,11 +1232,11 @@ function canEditAthlete(a){
   if(!canAdd())return false;
   return isMyClubAthlete(a);
 }
-// ELIMINARE atleta: admin sempre; utenti Aspes SOLO atlete Aspes (mai ProPatria/altre)
+// ELIMINARE atleta: admin sempre; utenti Club B SOLO atlete Club B (mai Club A/altre)
 function canDeleteAthlete(a){
   if(isAdmin())return true;
   if(!a)return false;
-  // Utenti non-admin: possono eliminare solo atlete della loro società (es. Aspes)
+  // Utenti non-admin: possono eliminare solo atlete della loro società (es. Club B)
   return isMyClubAthlete(a) && a.status!=='trasferita_aspes';
 }
 // Compat: canDelete generico (senza atleta) = solo admin
@@ -1272,13 +1274,13 @@ function renderAddCard(){
       <div class="field-wrap"><div class="field-label">Stato</div>
         <select id="a-status">
           <option value="lista">In lista</option><option value="visione">Visionata</option>
-      <option value="in_prova">In prova Aspes</option>
+      <option value="in_prova">In prova Club B</option>
           <option value="trattativa">In trattativa</option><option value="nuovo_acquisto">Nuovo acquisto</option>
           <option value="confermata">Confermata</option><option value="no">No</option>
         </select></div>
       <div class="field-wrap"><div class="field-label">Agente</div><select id="a-agente" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;background:var(--bg-card);color:var(--text)">
           <option value="">-- Seleziona agente --</option>
-          <option value="Aspes">Aspes</option>
+          <option value="">Club B</option>
           <option value="Paolo Buongiorno">Paolo Buongiorno</option>
           <option value="Gaia Genovesi">Gaia Genovesi</option>
           <option value="Filippo Nicastro">Filippo Nicastro</option>
@@ -1424,7 +1426,7 @@ function renderTable(){
   if(!slice.length){tbody.innerHTML='<tr><td colspan="11" style="text-align:center;padding:2rem;color:var(--text-ter)">Nessuna atleta trovata</td></tr>';return;}
   const editable=canEdit();tbody.innerHTML=slice.map(a=>{
     const deletable=canDeleteAthlete(a);
-    const destClass=(a.dest||'').includes('Aspes')?'aspes':(a.dest||'').includes('PGS')?'pgs':'';
+    const destClass=(a.dest||'').includes('')?'aspes':(a.dest||'').includes('PGS')?'pgs':'';
     const isNew=a.status==='nuovo_acquisto';
     const isNuova=a.id>=578&&NEW_AGENTS.includes(a.agente);
     const pctHtml=UNCERTAIN.includes(a.status)&&a.pct?`<div class="pct-wrap ${a.pct>=70?'pct-high':a.pct>=40?'pct-mid':'pct-low'}"><div class="pct-bar-bg"><div class="pct-bar-fill" style="width:${a.pct}%"></div></div><span class="pct-label">${a.pct}%</span></div>`:'';
@@ -1434,7 +1436,7 @@ function renderTable(){
       <td style="font-size:11px;color:var(--text-sec)" title="">${esc(a.societa||'—')}</td>
       <td><span class="role-badge" title="">${esc(a.ruolo||'—')}</span></td>
       <td><button class="pill ${SC[a.status]||'s-lista'}" onclick="event.stopPropagation();${editable?'cycleStatus('+a.id+')':''}">${SL[a.status]||a.status}</button>${pctHtml}</td>
-      <td>${a.dest?(a.dest.split('|').map(d=>{const dc=d.includes('Aspes')?'aspes':d.includes('PGS')?'pgs':'';return`<span class="dest-badge ${dc}" style="margin-bottom:2px">${esc(d.trim())}</span>`;}).join(' ')):'<span style="color:var(--text-ter);font-size:11px">—</span>'}</td>
+      <td>${a.dest?(a.dest.split('|').map(d=>{const dc=d.includes('')?'aspes':d.includes('PGS')?'pgs':'';return`<span class="dest-badge ${dc}" style="margin-bottom:2px">${esc(d.trim())}</span>`;}).join(' ')):'<span style="color:var(--text-ter);font-size:11px">—</span>'}</td>
       <td class="agent-cell" title="">${esc(a.agente||'—')}</td>
       <td class="note-cell">${esc(a.note||'—')}</td>
       <td>${a.rating?`<span class="rating-badge rating-${a.rating}">&#x2605;${a.rating}</span>`:'<span style="color:#d1d5db">—</span>'}</td>
@@ -1753,7 +1755,7 @@ function removePhoto(){
 }
 
 const CAMPO_LABELS={status:'Stato',rating:'Voto',note:'Note',dest:'Squadra dest.',ruolo:'Ruolo',pct:'% trattativa',telefono:'Telefono',agente:'Agente',societa:'Società',anno:'Anno',cognome:'Cognome',nome:'Nome'};
-const STATUS_LABELS={nuovo_acquisto:'Nuovo acquisto',confermata:'Confermata',in_prova:'In prova Aspes',trattativa:'In trattativa',visione:'Visionata',non_confermata:'Non confermata',trasferita_aspes:'Trasferita Aspes',lista:'In lista',no:'No'};
+const STATUS_LABELS={nuovo_acquisto:'Nuovo acquisto',confermata:'Confermata',in_prova:'In prova Club B',trattativa:'In trattativa',visione:'Visionata',non_confermata:'Non confermata',trasferita_aspes:'Trasferita Club B',lista:'In lista',no:'No'};
 async function saveLog(atletaId,atletaNome,campiCambiati){
   if(!campiCambiati.length)return;
   const logs=campiCambiati.map(c=>({atleta_id:atletaId,atleta_nome:atletaNome,utente_id:currentUser?.user?.id||null,utente_nome:currentProfile?.nome||currentUser?.user?.email||'?',club_id:currentProfile?.club_id||1,campo:c.campo,valore_prima:c.prima,valore_dopo:c.dopo,created_at:Date.now()}));
@@ -1922,7 +1924,17 @@ async function switchDrawerTab(tab){
   else{if(dc)dc.style.display='none';if(ds)ds.style.display='';stoBtn.style.background='var(--blue)';stoBtn.style.color='#fff';stoBtn.style.borderColor='var(--blue)';modBtn.style.background='transparent';modBtn.style.color='var(--text-sec)';modBtn.style.borderColor='var(--border)';var id=parseInt(document.getElementById('edit-id').value);if(id){var logs=await loadAtletaLogs(id);document.getElementById('storico-content').innerHTML=renderLogs(logs);}}
 }
 
-const SQUADS=[{id:'u19p',label:'U.19 Ecc. ProPatria',club:'ProPatria'},{id:'u17p',label:'U.17 Ecc. ProPatria',club:'ProPatria'},{id:'u15p',label:'U.15 Ecc. ProPatria',club:'ProPatria'},{id:'u14p',label:'U.14 Ecc. ProPatria',club:'ProPatria'},{id:'u13p',label:'U.13 Ecc. ProPatria',club:'ProPatria'},{id:'u12ap',label:'U.12A ProPatria',club:'ProPatria'},{id:'u12bp',label:'U.12B ProPatria',club:'ProPatria'},{id:'u19a',label:'U.19A Aspes',club:'Aspes'},{id:'u17a',label:'U.17A Aspes',club:'Aspes'},{id:'u17b',label:'U.17B Aspes',club:'Aspes'},{id:'u15a',label:'U.15A Aspes',club:'Aspes'},{id:'u15b',label:'U.15B Aspes',club:'Aspes'},{id:'u14a',label:'U.14A Aspes',club:'Aspes'},{id:'u14b',label:'U.14B Aspes',club:'Aspes'},{id:'u13a',label:'U.13A Aspes',club:'Aspes'},{id:'u13b',label:'U.13B Aspes',club:'Aspes'}];
+const SQUADS = [
+  {id:'u19',label:'U.19',club:''},
+  {id:'u17a',label:'U.17 A',club:''},
+  {id:'u17b',label:'U.17 B',club:''},
+  {id:'u15a',label:'U.15 A',club:''},
+  {id:'u15b',label:'U.15 B',club:''},
+  {id:'u14a',label:'U.14 A',club:''},
+  {id:'u14b',label:'U.14 B',club:''},
+  {id:'u13',label:'U.13',club:''},
+  {id:'u12',label:'U.12',club:''},
+];
 const TITOLARI_SLOTS=[{role:'P',label:'Palleggiatrice',key:'p1'},{role:'O',label:'Opposto',key:'o1'},{role:'C',label:'Centrale 1',key:'c1'},{role:'C',label:'Centrale 2',key:'c2'},{role:'B',label:'Banda 1',key:'s1'},{role:'B',label:'Banda 2',key:'s2'},{role:'L',label:'Libero',key:'l1'}];
 const RISERVE_SLOTS=[{role:'P',label:'Palleggiatrice 2',key:'ris_p2'},{role:'B',label:'Banda 3',key:'ris_s3'},{role:'B',label:'Banda 4',key:'ris_s4'},{role:'C',label:'Centrale 3',key:'ris_c3'},{role:'C',label:'Centrale 4',key:'ris_c4'},{role:'O',label:'Opposto 2',key:'ris_o2'},{role:'L',label:'Libero 2',key:'ris_l2'},{role:'?',label:'Slot libero 1',key:'ris_x1'},{role:'?',label:'Slot libero 2',key:'ris_x2'},{role:'?',label:'Slot libero 3',key:'ris_x3'}];
 const LS_ROSTER='mednow_rosters_v1';
@@ -2007,7 +2019,7 @@ function getRoster(sid){
 function normalizeLabel(s){return (s||'').replace(/\./g,'').replace(/\s+/g,' ').trim().toLowerCase();}
 function getSquadAthletes(label){
   const nl=normalizeLabel(label);
-  // Per i gruppi B (es. U17B Aspes) mostra anche le atlete del gruppo A (U17A Aspes)
+  // Per i gruppi B (es. U17B Club B) mostra anche le atlete del gruppo A (U17A Club B)
   const siblingLabel=nl.replace(/b aspes$/,'a aspes').replace(/b propatria$/,'a propatria');
   const hasSibling=siblingLabel!==nl;
   return athletes.filter(a=>{
@@ -2015,13 +2027,13 @@ function getSquadAthletes(label){
     const dests=(a.dest||'').split('|').map(d=>normalizeLabel(d));
     if(dests.includes(nl))return true;
     if(hasSibling&&dests.includes(siblingLabel))return true;
-    if(a.status==='trasferita_aspes'&&label.includes('Aspes'))return true;
+    if(a.status==='trasferita_aspes'&&label.includes(''))return true;
     return false;
   });
 }
 function roleMatch(r,slot){if(!r)return false;const rl=r.toLowerCase();const sl=(slot||'').toUpperCase();if(rl.includes('universal'))return true;if(sl==='P')return rl.includes('palleg')||rl.includes('alzat');if(sl==='O')return rl.includes('oppos');if(sl==='C')return rl.includes('central');if(sl==='S'||sl==='B')return rl.includes('schiacc')||rl.includes('banda')||rl.includes('lateral');if(sl==='L')return rl.includes('libero');return false;}
 function getShortRole(r){if(!r)return'?';const rl=r.toLowerCase();if(rl.includes('palleg')||rl.includes('alzat'))return'P';if(rl.includes('oppos'))return'O';if(rl.includes('central'))return'C';if(rl.includes('schiacc')||rl.includes('banda'))return'S';if(rl.includes('libero'))return'L';return r.substring(0,2).toUpperCase();}
-function renderSquadTabs(){document.getElementById('squad-tabs').innerHTML=SQUADS.map(s=>{const n=getSquadAthletes(s.label).length;const isA=s.club==='Aspes';return`<button class="squad-tab${currentSquad===s.id?' active':''}${isA?' aspes':''}" onclick="selectSquad('${s.id}')">${s.label.replace(' ProPatria','').replace(' Aspes','')} <span style="font-size:10px;opacity:0.7">${n}</span></button>`;}).join('');}
+function renderSquadTabs(){document.getElementById('squad-tabs').innerHTML=SQUADS.map(s=>{const n=getSquadAthletes(s.label).length;const isA=s.club==='';return`<button class="squad-tab${currentSquad===s.id?' active':''}${isA?' aspes':''}" onclick="selectSquad('${s.id}')">${s.label.replace(' Club A','').replace(' Club B','')} <span style="font-size:10px;opacity:0.7">${n}</span></button>`;}).join('');}
 
 function isYouthCategory(squadId){return /^u(12|13)/.test(squadId);}
 function getTitolariSlots(squadId){if(isYouthCategory(squadId))return TITOLARI_SLOTS.filter(s=>s.role!=='L');return TITOLARI_SLOTS;}
@@ -2126,7 +2138,7 @@ function renderRoster(){
   renderPool();renderSummary(getSquadAthletes(squad.label),r);
 }
 let pendingSlotRole=null;
-function showPoolForSlot(role){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster ProPatria","error");return;}pendingSlotRole=role;pendingSlotKey=null;setPoolFilter(role);}
+function showPoolForSlot(role){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster Club A","error");return;}pendingSlotRole=role;pendingSlotKey=null;setPoolFilter(role);}
 function setPoolFilter(f){poolFilter=(f||'all').toString().trim();document.querySelectorAll('.pool-filter-btn').forEach(b=>{const bid=b.id.replace('pf-','');b.classList.toggle('active',bid===f);});renderPool();}
 function renderPool(){
   const squad=SQUADS.find(s=>s.id===currentSquad);
@@ -2158,7 +2170,7 @@ function renderPool(){
   }).join('');
 }
 function addToRoster(aid){
-  if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster ProPatria","error");return;}
+  if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster Club A","error");return;}
   const r=getRoster(currentSquad);
   if(!r.riserve)r.riserve={};
   if(!r.titolari)r.titolari={};
@@ -2193,12 +2205,12 @@ function addToRoster(aid){
   }
   saveRosters();renderRoster();
 }
-function removeFromSlot(key){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster ProPatria","error");return;}const r=getRoster(currentSquad);r.titolari[key]=null;saveRosters();renderRoster();}
+function removeFromSlot(key){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster Club A","error");return;}const r=getRoster(currentSquad);r.titolari[key]=null;saveRosters();renderRoster();}
 function removeRiserva(aid){const r=getRoster(currentSquad);r.riserve_libere=(r.riserve_libere||[]).filter(id=>id!==aid);saveRosters();renderRoster();}
-function removeRiservaSlot(key){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster ProPatria","error");return;}const r=getRoster(currentSquad);if(r.riserve)r.riserve[key]=null;saveRosters();renderRoster();}
-function addToRiservaSlot(role,key){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster ProPatria","error");return;}pendingSlotRole=role;pendingSlotKey=key;setPoolFilter(role==='?'?'all':role);}
+function removeRiservaSlot(key){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster Club A","error");return;}const r=getRoster(currentSquad);if(r.riserve)r.riserve[key]=null;saveRosters();renderRoster();}
+function addToRiservaSlot(role,key){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster Club A","error");return;}pendingSlotRole=role;pendingSlotKey=key;setPoolFilter(role==='?'?'all':role);}
 function autoFillRoster(){
-  if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster ProPatria","error");return;}
+  if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster Club A","error");return;}
   const squad=SQUADS.find(s=>s.id===currentSquad);
   const available=getSquadAthletes(squad.label);
   const r=getRoster(currentSquad);
@@ -2219,7 +2231,7 @@ function autoFillRoster(){
   r.riserve_libere=sorted.filter(a=>!used.has(a.id)).map(a=>a.id);
   saveRosters();renderRoster();
 }
-function clearRoster(){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster ProPatria","error");return;}if(!confirm('Svuotare il roster?'))return;rosters[currentSquad]={titolari:{},riserve:{},riserve_libere:[]};saveRosters();renderRoster();}
+function clearRoster(){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster Club A","error");return;}if(!confirm('Svuotare il roster?'))return;rosters[currentSquad]={titolari:{},riserve:{},riserve_libere:[]};saveRosters();renderRoster();}
 function renderSummary(sa,r){
   const el=document.getElementById('roster-summary');if(!el)return;
   const na=sa.filter(a=>a.status==='nuovo_acquisto').length;
