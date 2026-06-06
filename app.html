@@ -618,16 +618,15 @@ td[title=""] { pointer-events: auto; }
 
 <datalist id="dl-societa"><option value="Esterna"></datalist>
 <datalist id="dl-dest">
-  <option>U.19 Ecc. ProPatria</option><option>U.17 Ecc. ProPatria</option>
-  <option>U.15 Ecc. ProPatria</option><option>U.14 Ecc. ProPatria</option>
-  <option>U.13 Ecc. ProPatria</option><option>U.12A ProPatria</option>
-  <option>U.12B ProPatria</option><option>U.15B ProPatria</option>
-  <option>U.14B ProPatria</option><option>U.13B ProPatria</option>
-  <option>U.19A Aspes</option><option>U.17A Aspes</option>
-  <option>U.17B Aspes</option>
-  <option>U.15A Aspes</option><option>U.14A Aspes</option>
-  <option>U.13A Aspes</option><option>U.12A Aspes</option>
-  <option>U.12B Aspes</option><option>PGS</option>
+  <option value="U.19">
+  <option value="U.17 A">
+  <option value="U.17 B">
+  <option value="U.15 A">
+  <option value="U.15 B">
+  <option value="U.14 A">
+  <option value="U.14 B">
+  <option value="U.13">
+  <option value="U.12">
 </datalist>
 
 <!-- LOGIN -->
@@ -747,10 +746,10 @@ td[title=""] { pointer-events: auto; }
         <label><input type="checkbox" value="nuovo_acquisto" onchange="renderTable();updateMultiFilterLabel('status')"> Nuovo acquisto</label>
         <label><input type="checkbox" value="confermata" onchange="renderTable();updateMultiFilterLabel('status')"> Confermata</label>
         <label><input type="checkbox" value="trattativa" onchange="renderTable();updateMultiFilterLabel('status')"> In trattativa</label>
-        <label><input type="checkbox" value="in_prova" onchange="renderTable();updateMultiFilterLabel('status')"> In prova Aspes</label>
+        <label><input type="checkbox" value="in_prova" onchange="renderTable();updateMultiFilterLabel('status')"> In prova</label>
         <label><input type="checkbox" value="visione" onchange="renderTable();updateMultiFilterLabel('status')"> Visionata</label>
         <label><input type="checkbox" value="non_confermata" onchange="renderTable();updateMultiFilterLabel('status')"> Non confermata</label>
-        <label><input type="checkbox" value="trasferita_aspes" onchange="renderTable();updateMultiFilterLabel('status')"> Trasferita Aspes</label>
+        <label><input type="checkbox" value="trasferita_aspes" onchange="renderTable();updateMultiFilterLabel('status')"> Trasferita</label>
         <label><input type="checkbox" value="lista" onchange="renderTable();updateMultiFilterLabel('status')"> In lista</label>
         <label><input type="checkbox" value="no" onchange="renderTable();updateMultiFilterLabel('status')"> No</label>
       </div>
@@ -831,7 +830,7 @@ td[title=""] { pointer-events: auto; }
   <div class="squad-tabs" id="squad-tabs"></div>
   <div id="roster-readonly-banner" style="display:none;align-items:center;gap:10px;background:#FEF3C7;border:1px solid #F59E0B;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:13px;color:#92400E">
     <span style="font-size:16px">&#x1F512;</span>
-    <span><b>Sola lettura</b> — Solo l'Admin può modificare i roster ProPatria. Puoi consultare il sestetto ma non modificarlo.</span>
+    <span><b>Sola lettura</b> — Solo l'Admin può modificare i roster. Puoi consultare il sestetto ma non modificarlo.</span>
   </div>
   <div class="roster-grid-wrap" style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1rem;align-items:start;width:100%">
     <!-- COLONNA SINISTRA: solo campo -->
@@ -918,40 +917,26 @@ td[title=""] { pointer-events: auto; }
     <div class="drawer-field">
       <label>Agente / Fonte</label>
       <select id="edit-agente">
-        <option>Aspes</option>
-        <option>Gold Sport - Donato Saltini</option>
-        <option>Squadre Regionali</option>
-        <option>Open Day</option>
-        <option>Senza agente</option>
+        <option value="">Seleziona agente</option>
+        <option value="Senza agente">Senza agente</option>
+        <option value="Squadre Regionali">Squadre Regionali</option>
+        <option value="Selezione Territoriale">Selezione Territoriale</option>
+        <option value="Open Day">Open Day</option>
+        <option value="Altro">Altro</option>
       </select>
     </div>
     <div class="drawer-field">
       <label>Squadra destinazione (multipla)</label>
-      <div id="edit-dest-checks" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:4px">
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="" onchange="updateDestPreview()"> U.19 Ecc. ProPatria</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="" onchange="updateDestPreview()"> U.17 Ecc. ProPatria</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="" onchange="updateDestPreview()"> U.15 Ecc. ProPatria</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="" onchange="updateDestPreview()"> U.14 Ecc. ProPatria</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="" onchange="updateDestPreview()"> U.13 Ecc. ProPatria</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U.12A ProPatria" onchange="updateDestPreview()"> U.12A ProPatria</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U.12B ProPatria" onchange="updateDestPreview()"> U.12B ProPatria</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U19A Aspes" onchange="updateDestPreview()"> U19A Aspes</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U17A Aspes" onchange="updateDestPreview()"> U17A Aspes</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U17B Aspes" onchange="updateDestPreview()"> U17B Aspes</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U15A Aspes" onchange="updateDestPreview()"> U15A Aspes</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U15B Aspes" onchange="updateDestPreview()"> U15B Aspes</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U14A Aspes" onchange="updateDestPreview()"> U14A Aspes</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U14B Aspes" onchange="updateDestPreview()"> U14B Aspes</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U13A Aspes" onchange="updateDestPreview()"> U13A Aspes</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U13B Aspes" onchange="updateDestPreview()"> U13B Aspes</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="PGS" onchange="updateDestPreview()"> PGS</label>
-      </div>
-    </div>
-    <div class="drawer-field" id="pct-field" style="display:none">
-      <label>Probabilita successo trattativa</label>
-      <div style="display:flex;align-items:center;gap:12px">
-        <input type="range" id="edit-pct" min="0" max="100" step="5" value="50" oninput="updatePctPreview(this.value)" style="flex:1">
-        <span id="pct-preview" style="font-size:18px;font-weight:800;min-width:44px;text-align:center;color:#6B21A8">50%</span>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="checkbox" value="U.19" onchange="updateDestPreview()"> U.19</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="checkbox" value="U.17 A" onchange="updateDestPreview()"> U.17 A</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="checkbox" value="U.17 B" onchange="updateDestPreview()"> U.17 B</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="checkbox" value="U.15 A" onchange="updateDestPreview()"> U.15 A</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="checkbox" value="U.15 B" onchange="updateDestPreview()"> U.15 B</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="checkbox" value="U.14 A" onchange="updateDestPreview()"> U.14 A</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="checkbox" value="U.14 B" onchange="updateDestPreview()"> U.14 B</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="checkbox" value="U.13" onchange="updateDestPreview()"> U.13</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="checkbox" value="U.12" onchange="updateDestPreview()"> U.12</label>
       </div>
       <div style="height:6px;background:var(--border);border-radius:3px;margin-top:6px;overflow:hidden">
         <div id="pct-bar-inner" style="height:100%;border-radius:3px;background:#EF9F27;width:50%"></div>
@@ -1023,7 +1008,7 @@ const SUPA='https://zaxbwqxnrofiggldoahw.supabase.co';
 const KEY='sb_publishable_aS4aRr3OMwWLOT1TmIhGPg_gfY-dwIO';
 let currentUser=null,currentProfile=null,athletes=[],page=0,currentSort='priority',poolFilter='all';
 const PER_PAGE=30;
-const SL={nuovo_acquisto:'Nuovo acquisto',confermata:'Confermata',in_prova:'In prova Aspes',non_confermata:'Non confermata',trasferita_aspes:'Trasferita Aspes',visione:'Visionata',lista:'In lista',trattativa:'In trattativa',no:'No'};
+const SL={nuovo_acquisto:'Nuovo acquisto',confermata:'Confermata',in_prova:'In prova',non_confermata:'Non confermata',trasferita_aspes:'Trasferita',visione:'Visionata',lista:'In lista',trattativa:'In trattativa',no:'No'};
 const SC={nuovo_acquisto:'s-nuovo-acquisto',confermata:'s-confermata',in_prova:'s-in-prova',non_confermata:'s-non-confermata',trasferita_aspes:'s-trasferita',visione:'s-visione',lista:'s-lista',trattativa:'s-trattativa',no:'s-no'};
 const CYCLE=['lista','visione','in_prova','trattativa','nuovo_acquisto','confermata','non_confermata','trasferita_aspes','no'];
 const CONFIRMED=['nuovo_acquisto','confermata'];
@@ -1188,7 +1173,7 @@ function isMyClubAthlete(a){
   // Se è admin della propria società, vede anche chi sta valutando
   return false;
 }
-// AGGIUNGERE atlete: admin + ruoli Aspes
+// AGGIUNGERE atlete: admin + ruoli
 function canAdd(){return['admin','allenatore','dirigente','reclutatore','scouting'].includes(currentProfile?.ruolo);}
 // MODIFICARE atleta: admin sempre; utenti club solo le proprie
 function canEditAthlete(a){
@@ -1196,11 +1181,11 @@ function canEditAthlete(a){
   if(!canAdd())return false;
   return isMyClubAthlete(a);
 }
-// ELIMINARE atleta: admin sempre; utenti Aspes SOLO atlete Aspes (mai ProPatria/altre)
+// ELIMINARE atleta: admin sempre; utenti non-admin solo atlete della loro societa
 function canDeleteAthlete(a){
   if(isAdmin())return true;
   if(!a)return false;
-  // Utenti non-admin: possono eliminare solo atlete della loro società (es. Aspes)
+  // Utenti non-admin: possono eliminare solo atlete della loro società 
   return isMyClubAthlete(a) && a.status!=='trasferita_aspes';
 }
 // Compat: canDelete generico (senza atleta) = solo admin
@@ -1708,7 +1693,7 @@ function removePhoto(){
 }
 
 const CAMPO_LABELS={status:'Stato',rating:'Voto',note:'Note',dest:'Squadra dest.',ruolo:'Ruolo',pct:'% trattativa',telefono:'Telefono',agente:'Agente',societa:'Società',anno:'Anno',cognome:'Cognome',nome:'Nome'};
-const STATUS_LABELS={nuovo_acquisto:'Nuovo acquisto',confermata:'Confermata',in_prova:'In prova Aspes',trattativa:'In trattativa',visione:'Visionata',non_confermata:'Non confermata',trasferita_aspes:'Trasferita Aspes',lista:'In lista',no:'No'};
+const STATUS_LABELS={nuovo_acquisto:'Nuovo acquisto',confermata:'Confermata',in_prova:'In prova',trattativa:'In trattativa',visione:'Visionata',non_confermata:'Non confermata',trasferita_aspes:'Trasferita',lista:'In lista',no:'No'};
 async function saveLog(atletaId,atletaNome,campiCambiati){
   if(!campiCambiati.length)return;
   const logs=campiCambiati.map(c=>({atleta_id:atletaId,atleta_nome:atletaNome,utente_id:currentUser?.user?.id||null,utente_nome:currentProfile?.nome||currentUser?.user?.email||'?',club_id:currentProfile?.club_id||1,campo:c.campo,valore_prima:c.prima,valore_dopo:c.dopo,created_at:Date.now()}));
@@ -2090,7 +2075,7 @@ function renderRoster(){
   renderPool();renderSummary(getSquadAthletes(squad.label),r);
 }
 let pendingSlotRole=null;
-function showPoolForSlot(role){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster ProPatria","error");return;}pendingSlotRole=role;pendingSlotKey=null;setPoolFilter(role);}
+function showPoolForSlot(role){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster","error");return;}pendingSlotRole=role;pendingSlotKey=null;setPoolFilter(role);}
 function setPoolFilter(f){poolFilter=(f||'all').toString().trim();document.querySelectorAll('.pool-filter-btn').forEach(b=>{const bid=b.id.replace('pf-','');b.classList.toggle('active',bid===f);});renderPool();}
 function renderPool(){
   const squad=SQUADS.find(s=>s.id===currentSquad);
@@ -2122,7 +2107,7 @@ function renderPool(){
   }).join('');
 }
 function addToRoster(aid){
-  if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster ProPatria","error");return;}
+  if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster","error");return;}
   const r=getRoster(currentSquad);
   if(!r.riserve)r.riserve={};
   if(!r.titolari)r.titolari={};
@@ -2157,12 +2142,12 @@ function addToRoster(aid){
   }
   saveRosters();renderRoster();
 }
-function removeFromSlot(key){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster ProPatria","error");return;}const r=getRoster(currentSquad);r.titolari[key]=null;saveRosters();renderRoster();}
+function removeFromSlot(key){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster","error");return;}const r=getRoster(currentSquad);r.titolari[key]=null;saveRosters();renderRoster();}
 function removeRiserva(aid){const r=getRoster(currentSquad);r.riserve_libere=(r.riserve_libere||[]).filter(id=>id!==aid);saveRosters();renderRoster();}
-function removeRiservaSlot(key){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster ProPatria","error");return;}const r=getRoster(currentSquad);if(r.riserve)r.riserve[key]=null;saveRosters();renderRoster();}
-function addToRiservaSlot(role,key){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster ProPatria","error");return;}pendingSlotRole=role;pendingSlotKey=key;setPoolFilter(role==='?'?'all':role);}
+function removeRiservaSlot(key){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster","error");return;}const r=getRoster(currentSquad);if(r.riserve)r.riserve[key]=null;saveRosters();renderRoster();}
+function addToRiservaSlot(role,key){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster","error");return;}pendingSlotRole=role;pendingSlotKey=key;setPoolFilter(role==='?'?'all':role);}
 function autoFillRoster(){
-  if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster ProPatria","error");return;}
+  if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster","error");return;}
   const squad=SQUADS.find(s=>s.id===currentSquad);
   const available=getSquadAthletes(squad.label);
   const r=getRoster(currentSquad);
@@ -2183,7 +2168,7 @@ function autoFillRoster(){
   r.riserve_libere=sorted.filter(a=>!used.has(a.id)).map(a=>a.id);
   saveRosters();renderRoster();
 }
-function clearRoster(){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster ProPatria","error");return;}if(!confirm('Svuotare il roster?'))return;rosters[currentSquad]={titolari:{},riserve:{},riserve_libere:[]};saveRosters();renderRoster();}
+function clearRoster(){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster","error");return;}if(!confirm('Svuotare il roster?'))return;rosters[currentSquad]={titolari:{},riserve:{},riserve_libere:[]};saveRosters();renderRoster();}
 function renderSummary(sa,r){
   const el=document.getElementById('roster-summary');if(!el)return;
   const na=sa.filter(a=>a.status==='nuovo_acquisto').length;
