@@ -1189,7 +1189,7 @@ function renderUserBadge(){
   const p=currentProfile;
   const rc={admin:'role-admin',allenatore:'role-allenatore',dirigente:'role-dirigente',reclutatore:'role-reclutatore',scouting:'role-scouting'};
   const rl={admin:'Admin',allenatore:'Allenatore',dirigente:'Dirigente',reclutatore:'Reclutatore',scouting:'Scouting'};
-  document.getElementById('user-badge').innerHTML=`<span class="user-name">${p.nome}</span><span class="user-role ${rc[p.ruolo]||''}">${rl[p.ruolo]||p.ruolo}</span>${p.societa?`<span style="font-size:10px;color:rgba(255,255,255,0.5)">${p.societa}</span>`:''}<button class="btn-logout" onclick="doLogout()">Esci</button>`;
+  document.getElementById('user-badge').innerHTML=`<span class="user-name">${p.nome}</span><span class="user-role ${rc[p.ruolo]||''}">${rl[p.ruolo]||p.ruolo}</span>${p.societa?`<span style="font-size:10px;color:rgba(255,255,255,0.5)">${p.societa}</span>`:''}<button ${isAdmin()&&currentProfile?.club_id!==1?'<button onclick="openSettings()" style="font-size:11px;background:rgba(30,106,255,0.2);border:1px solid rgba(30,106,255,0.4);color:#7FB3F5;padding:4px 10px;border-radius:10px;cursor:pointer;margin-right:4px">⚙️</button>':""}<button class="btn-logout" onclick="doLogout()">Esci</button>`;
 }
 
 function renderAdminActions(){
