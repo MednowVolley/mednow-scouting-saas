@@ -1421,7 +1421,7 @@ function renderTable(){
   document.getElementById('btn-next').disabled=page>=totalPages-1;
   const tbody=document.getElementById('table-body');
   if(!slice.length){tbody.innerHTML='<tr><td colspan="11" style="text-align:center;padding:2rem;color:var(--text-ter)">Nessuna atleta trovata</td></tr>';return;}
-  const editable=canEdit();tbody.innerHTML=slice.map(a=>{
+  const editable = isAdmin() || canEditAthlete(a);tbody.innerHTML=slice.map(a=>{
     const deletable=canDeleteAthlete(a);
     const destClass=(a.dest||'').includes('Aspes')?'aspes':(a.dest||'').includes('PGS')?'pgs':'';
     const isNew=a.status==='nuovo_acquisto';
