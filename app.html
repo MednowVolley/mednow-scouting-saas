@@ -448,6 +448,40 @@ td[title=""] { pointer-events: auto; }
 .ob-action-btn:hover{background:#BFDBFE}
 .ob-trial-bar{background:#EBF4FF;border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:10px;margin-bottom:20px;font-size:13px;color:#185FA5;font-weight:600}
 
+
+/* ── SETTINGS MODAL ── */
+#settings-overlay{display:none;position:fixed;inset:0;background:rgba(10,22,40,0.85);z-index:9990;align-items:center;justify-content:center}
+#settings-overlay.show{display:flex}
+.set-modal{background:#fff;border-radius:20px;width:92%;max-width:560px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 80px rgba(0,0,0,0.4)}
+.set-header{background:#0A1628;padding:20px 24px;display:flex;align-items:center;justify-content:space-between}
+.set-title{font-family:'Barlow',sans-serif;font-size:18px;font-weight:800;color:#fff}
+.set-close{background:none;border:none;color:rgba(255,255,255,0.6);font-size:22px;cursor:pointer;padding:0;line-height:1}
+.set-close:hover{color:#fff}
+.set-tabs{display:flex;border-bottom:2px solid #E5E7EB;padding:0 24px}
+.set-tab{padding:12px 16px;font-size:13px;font-weight:600;color:#6B7280;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s}
+.set-tab.active{color:#185FA5;border-bottom-color:#185FA5}
+.set-body{padding:24px;overflow-y:auto;flex:1}
+.set-section{margin-bottom:24px}
+.set-section-title{font-size:12px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px}
+.set-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+.set-item{display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:#F9FAFB;border:1px solid #E5E7EB;border-radius:8px}
+.set-item-name{font-size:13px;color:#111827;font-weight:500}
+.set-item-del{background:none;border:none;color:#9CA3AF;cursor:pointer;font-size:16px;padding:0;line-height:1;transition:color .1s}
+.set-item-del:hover{color:#EF4444}
+.set-add-row{display:flex;gap:8px}
+.set-input{flex:1;padding:9px 12px;border:2px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;transition:border-color .15s}
+.set-input:focus{border-color:#185FA5}
+.set-add-btn{padding:9px 16px;background:#185FA5;color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .15s}
+.set-add-btn:hover{background:#1558e0}
+.set-footer{padding:16px 24px;border-top:1px solid #E5E7EB;display:flex;justify-content:flex-end;gap:10px}
+.set-save{padding:10px 24px;background:#0A1628;color:#fff;border:none;border-radius:10px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:700;cursor:pointer;transition:background .15s}
+.set-save:hover{background:#185FA5}
+.set-cancel{padding:10px 20px;background:#F3F4F6;color:#374151;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer}
+.set-btn{display:none;align-items:center;gap:6px;padding:7px 12px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.8);border-radius:8px;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s}
+.set-btn.visible{display:flex}
+.set-btn:hover{background:rgba(255,255,255,0.2);color:#fff}
+.set-empty{color:#9CA3AF;font-size:13px;text-align:center;padding:12px 0;font-style:italic}
+
 </style>
 
 <style id="court-override">
@@ -576,6 +610,47 @@ td[title=""] { pointer-events: auto; }
 </style>
 </head>
 <body>
+
+<!-- SETTINGS MODAL -->
+<div id="settings-overlay">
+  <div class="set-modal">
+    <div class="set-header">
+      <span class="set-title">⚙️ Impostazioni club</span>
+      <button class="set-close" onclick="closeSettings()">✕</button>
+    </div>
+    <div class="set-tabs">
+      <div class="set-tab active" onclick="switchSetTab('squads',this)">Squadre</div>
+      <div class="set-tab" onclick="switchSetTab('agenti',this)">Agenti / Fonti</div>
+    </div>
+    <div class="set-body">
+      <!-- TAB SQUADRE -->
+      <div id="set-tab-squads">
+        <div class="set-section-title">Squadre del tuo club</div>
+        <p style="font-size:12px;color:#6B7280;margin-bottom:12px">Aggiungi le squadre del tuo settore giovanile. Apparirà nei filtri e nelle schede atleta.</p>
+        <div class="set-list" id="set-squads-list"></div>
+        <div class="set-add-row">
+          <input class="set-input" id="set-squad-input" placeholder="es. U.19 Eccellenza" onkeydown="if(event.key==='Enter')addSettingItem('squads')">
+          <button class="set-add-btn" onclick="addSettingItem('squads')">+ Aggiungi</button>
+        </div>
+      </div>
+      <!-- TAB AGENTI -->
+      <div id="set-tab-agenti" style="display:none">
+        <div class="set-section-title">Agenti e fonti scouting</div>
+        <p style="font-size:12px;color:#6B7280;margin-bottom:12px">Aggiungi agenti, procuratori o fonti di scouting. Apparirà nel menu "Agente" delle schede atleta.</p>
+        <div class="set-list" id="set-agenti-list"></div>
+        <div class="set-add-row">
+          <input class="set-input" id="set-agente-input" placeholder="es. Paolo Buongiorno" onkeydown="if(event.key==='Enter')addSettingItem('agenti')">
+          <button class="set-add-btn" onclick="addSettingItem('agenti')">+ Aggiungi</button>
+        </div>
+      </div>
+    </div>
+    <div class="set-footer">
+      <button class="set-cancel" onclick="closeSettings()">Annulla</button>
+      <button class="set-save" onclick="saveSettings()">💾 Salva impostazioni</button>
+    </div>
+  </div>
+</div>
+
 <!-- PAYWALL -->
 
 <!-- ONBOARDING -->
@@ -1086,7 +1161,7 @@ async function doLogin(){
   }catch(e){err.textContent='Errore: '+e.message;err.classList.add('show');btn.disabled=false;btn.textContent='Accedi';}
 }
 
-function startApp(){checkPaymentReturn();setTimeout(checkTrialStatus,1000);setTimeout(checkOnboarding,2000);
+function startApp(){checkPaymentReturn();loadClubSettings().then(()=>{if(typeof renderSquadTabs==="function")renderSquadTabs();});setTimeout(checkTrialStatus,1000);setTimeout(checkOnboarding,2000);setTimeout(checkSettingsButton,1500);
   document.getElementById('login-screen').style.display='none';
   document.getElementById('app-screen').style.display='block';
   renderUserBadge();renderAdminActions();renderAddCard();
@@ -1954,7 +2029,7 @@ function getSquadAthletes(label){
 }
 function roleMatch(r,slot){if(!r)return false;const rl=r.toLowerCase();const sl=(slot||'').toUpperCase();if(rl.includes('universal'))return true;if(sl==='P')return rl.includes('palleg')||rl.includes('alzat');if(sl==='O')return rl.includes('oppos');if(sl==='C')return rl.includes('central');if(sl==='S'||sl==='B')return rl.includes('schiacc')||rl.includes('banda')||rl.includes('lateral');if(sl==='L')return rl.includes('libero');return false;}
 function getShortRole(r){if(!r)return'?';const rl=r.toLowerCase();if(rl.includes('palleg')||rl.includes('alzat'))return'P';if(rl.includes('oppos'))return'O';if(rl.includes('central'))return'C';if(rl.includes('schiacc')||rl.includes('banda'))return'S';if(rl.includes('libero'))return'L';return r.substring(0,2).toUpperCase();}
-function renderSquadTabs(){document.getElementById('squad-tabs').innerHTML=SQUADS.map(s=>{const n=getSquadAthletes(s.label).length;const isA=s.club==='Aspes';return`<button class="squad-tab${currentSquad===s.id?' active':''}${isA?' aspes':''}" onclick="selectSquad('${s.id}')">${s.label.replace(' ProPatria','').replace(' Aspes','')} <span style="font-size:10px;opacity:0.7">${n}</span></button>`;}).join('');}
+function renderSquadTabs(){document.getElementById('squad-tabs').innerHTML=getActiveSquads().map(s=>{const n=getSquadAthletes(s.label).length;const isA=s.club==='Aspes';return`<button class="squad-tab${currentSquad===s.id?' active':''}${isA?' aspes':''}" onclick="selectSquad('${s.id}')">${s.label.replace(' ProPatria','').replace(' Aspes','')} <span style="font-size:10px;opacity:0.7">${n}</span></button>`;}).join('');}
 
 function isYouthCategory(squadId){return /^u(12|13)/.test(squadId);}
 function getTitolariSlots(squadId){if(isYouthCategory(squadId))return TITOLARI_SLOTS.filter(s=>s.role!=='L');return TITOLARI_SLOTS;}
@@ -2026,7 +2101,7 @@ function renderRoster(){
   if(roEl){roEl.style.display=readOnly?'flex':'none';}
   const actEl=document.getElementById('roster-actions');
   if(actEl){actEl.style.display=readOnly?'none':'flex';}
-  const squad=SQUADS.find(s=>s.id===currentSquad);if(!squad)return;
+  const squad=getActiveSquads().find(s=>s.id===currentSquad);if(!squad)return;
   const r=getRoster(currentSquad);
   const filled=Object.values(r.titolari).filter(Boolean).length;
   document.getElementById('titolari-count').textContent=filled+'/7';
@@ -2062,7 +2137,7 @@ let pendingSlotRole=null;
 function showPoolForSlot(role){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster","error");return;}pendingSlotRole=role;pendingSlotKey=null;setPoolFilter(role);}
 function setPoolFilter(f){poolFilter=(f||'all').toString().trim();document.querySelectorAll('.pool-filter-btn').forEach(b=>{const bid=b.id.replace('pf-','');b.classList.toggle('active',bid===f);});renderPool();}
 function renderPool(){
-  const squad=SQUADS.find(s=>s.id===currentSquad);
+  const squad=getActiveSquads().find(s=>s.id===currentSquad);
   const sa=getSquadAthletes(squad.label);
   const assignedIds=getAssignedIds();
   const filtered=sa.filter(a=>poolFilter==='all'||roleMatch(a.ruolo,poolFilter));
@@ -2132,7 +2207,7 @@ function removeRiservaSlot(key){if(!canEditRoster(currentSquad)){showToast("Solo
 function addToRiservaSlot(role,key){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster","error");return;}pendingSlotRole=role;pendingSlotKey=key;setPoolFilter(role==='?'?'all':role);}
 function autoFillRoster(){
   if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster","error");return;}
-  const squad=SQUADS.find(s=>s.id===currentSquad);
+  const squad=getActiveSquads().find(s=>s.id===currentSquad);
   const available=getSquadAthletes(squad.label);
   const r=getRoster(currentSquad);
   const priority=a=>['confermata','nuovo_acquisto','trattativa','non_confermata','trasferita_aspes'].indexOf(a.status);
@@ -2318,6 +2393,144 @@ function startNotifPolling(){
   setInterval(loadNotifications, 60000);
 }
 
+
+
+// ── CLUB SETTINGS ──
+let clubSettings = { agenti: [], squads: [] };
+let settingsCurrentTab = 'squads';
+
+async function loadClubSettings() {
+  if (!currentProfile || currentProfile.club_id === 1) return; // Mednow usa SQUADS hardcoded
+  try {
+    const resp = await fetch(
+      window.SUPA_URL + '/rest/v1/clubs?id=eq.' + currentProfile.club_id + '&select=settings',
+      { headers: { 'apikey': window.SUPA_KEY, 'Authorization': 'Bearer ' + (currentUser?.access_token || window.SUPA_KEY) } }
+    );
+    if (!resp.ok) return;
+    const data = await resp.json();
+    if (data[0]?.settings) {
+      clubSettings = data[0].settings;
+      // Applica squadre dinamiche
+      if (clubSettings.squads && clubSettings.squads.length > 0) {
+        window.DYNAMIC_SQUADS = clubSettings.squads.map((s, i) => ({
+          id: 'sq_' + i,
+          label: s,
+          club: ''
+        }));
+      }
+    }
+  } catch(e) { console.warn('loadClubSettings error:', e); }
+}
+
+function openSettings() {
+  if (!isAdmin()) return;
+  renderSettingsLists();
+  document.getElementById('settings-overlay').classList.add('show');
+}
+
+function closeSettings() {
+  document.getElementById('settings-overlay').classList.remove('show');
+}
+
+function switchSetTab(tab, el) {
+  settingsCurrentTab = tab;
+  document.querySelectorAll('.set-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('set-tab-squads').style.display = tab === 'squads' ? '' : 'none';
+  document.getElementById('set-tab-agenti').style.display = tab === 'agenti' ? '' : 'none';
+}
+
+function renderSettingsLists() {
+  ['squads', 'agenti'].forEach(type => {
+    const list = document.getElementById('set-' + type + '-list');
+    const items = clubSettings[type] || [];
+    if (!items.length) {
+      list.innerHTML = '<div class="set-empty">Nessuno aggiunto ancora</div>';
+      return;
+    }
+    list.innerHTML = items.map((item, i) =>
+      `<div class="set-item">
+        <span class="set-item-name">${item}</span>
+        <button class="set-item-del" onclick="removeSettingItem('${type}',${i})" title="Rimuovi">✕</button>
+      </div>`
+    ).join('');
+  });
+}
+
+function addSettingItem(type) {
+  const input = document.getElementById('set-' + (type === 'squads' ? 'squad' : 'agente') + '-input');
+  const val = input.value.trim();
+  if (!val) return;
+  if (!clubSettings[type]) clubSettings[type] = [];
+  if (!clubSettings[type].includes(val)) {
+    clubSettings[type].push(val);
+    renderSettingsLists();
+  }
+  input.value = '';
+  input.focus();
+}
+
+function removeSettingItem(type, idx) {
+  clubSettings[type].splice(idx, 1);
+  renderSettingsLists();
+}
+
+async function saveSettings() {
+  const btn = document.querySelector('.set-save');
+  btn.textContent = '⏳ Salvataggio...';
+  btn.disabled = true;
+  try {
+    const resp = await fetch(
+      window.SUPA_URL + '/rest/v1/clubs?id=eq.' + currentProfile.club_id,
+      {
+        method: 'PATCH',
+        headers: {
+          'apikey': window.SUPA_KEY,
+          'Authorization': 'Bearer ' + (currentUser?.access_token || window.SUPA_KEY),
+          'Content-Type': 'application/json',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify({ settings: clubSettings })
+      }
+    );
+    if (resp.ok) {
+      // Aggiorna SQUADS e agenti live
+      if (clubSettings.squads?.length) {
+        window.DYNAMIC_SQUADS = clubSettings.squads.map((s, i) => ({
+          id: 'sq_' + i, label: s, club: ''
+        }));
+      }
+      // Aggiorna datalist agenti
+      const dl = document.getElementById('dl-agenti');
+      if (dl) {
+        dl.innerHTML = ['Senza agente', ...(clubSettings.agenti || [])].map(a => `<option value="${a}">`).join('');
+      }
+      showToast('Impostazioni salvate!', 'success');
+      closeSettings();
+      // Ricarica squadre tab roster
+      if (typeof renderSquadTabs === 'function') renderSquadTabs();
+    } else {
+      showToast('Errore nel salvataggio', 'error');
+    }
+  } catch(e) {
+    showToast('Errore: ' + e.message, 'error');
+  }
+  btn.textContent = '💾 Salva impostazioni';
+  btn.disabled = false;
+}
+
+// Mostra bottone settings solo per admin non-Mednow
+function checkSettingsButton() {
+  const btn = document.getElementById('settings-btn');
+  if (btn && isAdmin() && currentProfile?.club_id !== 1) {
+    btn.classList.add('visible');
+  }
+}
+
+
+function getActiveSquads(){
+  return (window.DYNAMIC_SQUADS && window.DYNAMIC_SQUADS.length) ? window.DYNAMIC_SQUADS : SQUADS;
+}
 
 // ── ONBOARDING ──
 const OB_STEPS = [
