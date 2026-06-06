@@ -769,29 +769,18 @@ td[title=""] { pointer-events: auto; }
     <div class="multi-filter-wrap">
       <button type="button" class="multi-filter-btn" onclick="toggleMultiFilter('agente')" id="btn-multi-agente">Tutti gli agenti <span style="font-size:10px">&#x25BC;</span></button>
       <div class="multi-filter-dropdown" id="dd-agente">
-        <label><input type="checkbox" value="Aspes" onchange="renderTable();updateMultiFilterLabel('agente')"> Aspes</label>
-        <label><input type="checkbox" value="Paolo Buongiorno" onchange="renderTable();updateMultiFilterLabel('agente')"> Paolo Buongiorno</label>
-        <label><input type="checkbox" value="Gaia Genovesi" onchange="renderTable();updateMultiFilterLabel('agente')"> Gaia Genovesi</label>
-        <label><input type="checkbox" value="Filippo Nicastro" onchange="renderTable();updateMultiFilterLabel('agente')"> Filippo Nicastro</label>
-        <label><input type="checkbox" value="Gold Sport - Donato Saltini" onchange="renderTable();updateMultiFilterLabel('agente')"> Gold Sport - Donato Saltini</label>
-        <label><input type="checkbox" value="Stefano Borla" onchange="renderTable();updateMultiFilterLabel('agente')"> Stefano Borla</label>
-        <label><input type="checkbox" value="Vannoni" onchange="renderTable();updateMultiFilterLabel('agente')"> Vannoni</label>
-        <label><input type="checkbox" value="Giugni" onchange="renderTable();updateMultiFilterLabel('agente')"> Giugni</label>
         <label><input type="checkbox" value="Squadre Regionali" onchange="renderTable();updateMultiFilterLabel('agente')"> Squadre Regionali</label>
-        <label><input type="checkbox" value="Selezione Territoriale MML" onchange="renderTable();updateMultiFilterLabel('agente')"> Selezione Territoriale MML</label>
         <label><input type="checkbox" value="Open Day" onchange="renderTable();updateMultiFilterLabel('agente')"> Open Day</label>
-        <label><input type="checkbox" value="Open Day 30 Maggio" onchange="renderTable();updateMultiFilterLabel('agente')"> Open Day 30 Maggio</label>
-        <label><input type="checkbox" value="Senza agente" onchange="renderTable();updateMultiFilterLabel('agente')"> Senza agente</label>
       </div>
     </div>
     <div class="multi-filter-wrap">
       <button type="button" class="multi-filter-btn" onclick="toggleMultiFilter('dest')" id="btn-multi-dest">Tutte le squadre <span style="font-size:10px">&#x25BC;</span></button>
       <div class="multi-filter-dropdown" id="dd-dest">
-        <label><input type="checkbox" value="U.19 Ecc. ProPatria" onchange="renderTable();updateMultiFilterLabel('dest')"> U.19 Ecc. ProPatria</label>
-        <label><input type="checkbox" value="U.17 Ecc. ProPatria" onchange="renderTable();updateMultiFilterLabel('dest')"> U.17 Ecc. ProPatria</label>
-        <label><input type="checkbox" value="U.15 Ecc. ProPatria" onchange="renderTable();updateMultiFilterLabel('dest')"> U.15 Ecc. ProPatria</label>
-        <label><input type="checkbox" value="U.14 Ecc. ProPatria" onchange="renderTable();updateMultiFilterLabel('dest')"> U.14 Ecc. ProPatria</label>
-        <label><input type="checkbox" value="U.13 Ecc. ProPatria" onchange="renderTable();updateMultiFilterLabel('dest')"> U.13 Ecc. ProPatria</label>
+        <label><input type="checkbox" value="" onchange="renderTable();updateMultiFilterLabel('dest')"> U.19 Ecc. ProPatria</label>
+        <label><input type="checkbox" value="" onchange="renderTable();updateMultiFilterLabel('dest')"> U.17 Ecc. ProPatria</label>
+        <label><input type="checkbox" value="" onchange="renderTable();updateMultiFilterLabel('dest')"> U.15 Ecc. ProPatria</label>
+        <label><input type="checkbox" value="" onchange="renderTable();updateMultiFilterLabel('dest')"> U.14 Ecc. ProPatria</label>
+        <label><input type="checkbox" value="" onchange="renderTable();updateMultiFilterLabel('dest')"> U.13 Ecc. ProPatria</label>
         <label><input type="checkbox" value="U.12A ProPatria" onchange="renderTable();updateMultiFilterLabel('dest')"> U.12A ProPatria</label>
         <label><input type="checkbox" value="U.12B ProPatria" onchange="renderTable();updateMultiFilterLabel('dest')"> U.12B ProPatria</label>
         <label><input type="checkbox" value="U19A Aspes" onchange="renderTable();updateMultiFilterLabel('dest')"> U19A Aspes</label>
@@ -939,11 +928,11 @@ td[title=""] { pointer-events: auto; }
     <div class="drawer-field">
       <label>Squadra destinazione (multipla)</label>
       <div id="edit-dest-checks" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:4px">
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U.19 Ecc. ProPatria" onchange="updateDestPreview()"> U.19 Ecc. ProPatria</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U.17 Ecc. ProPatria" onchange="updateDestPreview()"> U.17 Ecc. ProPatria</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U.15 Ecc. ProPatria" onchange="updateDestPreview()"> U.15 Ecc. ProPatria</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U.14 Ecc. ProPatria" onchange="updateDestPreview()"> U.14 Ecc. ProPatria</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U.13 Ecc. ProPatria" onchange="updateDestPreview()"> U.13 Ecc. ProPatria</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="" onchange="updateDestPreview()"> U.19 Ecc. ProPatria</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="" onchange="updateDestPreview()"> U.17 Ecc. ProPatria</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="" onchange="updateDestPreview()"> U.15 Ecc. ProPatria</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="" onchange="updateDestPreview()"> U.14 Ecc. ProPatria</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="" onchange="updateDestPreview()"> U.13 Ecc. ProPatria</label>
         <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U.12A ProPatria" onchange="updateDestPreview()"> U.12A ProPatria</label>
         <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U.12B ProPatria" onchange="updateDestPreview()"> U.12B ProPatria</label>
         <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:500;padding:4px 10px;border:1.5px solid var(--border-med);border-radius:16px;cursor:pointer;background:var(--bg)"><input type="checkbox" value="U19A Aspes" onchange="updateDestPreview()"> U19A Aspes</label>
@@ -1040,7 +1029,7 @@ const CYCLE=['lista','visione','in_prova','trattativa','nuovo_acquisto','conferm
 const CONFIRMED=['nuovo_acquisto','confermata'];
 const UNCERTAIN=['trattativa','non_confermata'];
 const ACTIVE=['nuovo_acquisto','confermata','in_prova','trattativa','non_confermata','trasferita_aspes'];
-const NEW_AGENTS=['Gaia Genovesi','Filippo Nicastro','Gold Sport - Donato Saltini','Squadre Regionali'];
+const NEW_AGENTS = ['Squadre Regionali','Selezione Territoriale','Open Day'];
 
 async function refreshSession(){
   try{
