@@ -2001,7 +2001,7 @@ async function _upsertRoster(sid){
     squad_id:sid,
     titolari:r.titolari||{},
     riserve:r.riserve||{},
-    updated_at:Date.now(),
+    updated_at:new Date().toISOString(),
     updated_by:currentUser?.user?.id||null,
     updated_by_nome:currentProfile?.nome||'',
     club_id:currentProfile?.club_id||1
