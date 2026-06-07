@@ -482,6 +482,7 @@ td[title=""] { pointer-events: auto; }
 .set-btn:hover{background:rgba(255,255,255,0.2);color:#fff}
 .set-empty{color:#9CA3AF;font-size:13px;text-align:center;padding:12px 0;font-style:italic}
 
+.altezza-badge{font-size:11px;color:var(--text-sec);margin-left:4px}
 </style>
 
 <style id="court-override">
@@ -957,6 +958,7 @@ td[title=""] { pointer-events: auto; }
     </div>
     <div class="drawer-row2">
       <div class="drawer-field"><label>Anno nascita</label><input type="text" id="edit-anno"></div>
+    <div class="drawer-field"><label>Altezza (cm)</label><input type="number" id="edit-altezza" min="140" max="220" placeholder="es. 178"></div>
       <div class="drawer-field"><label>Stato</label>
         <select id="edit-status">
           </select>
@@ -1276,7 +1278,8 @@ function renderAddCard(){
     <div class="form-row">
       <div class="field-wrap"><div class="field-label">Cognome *</div><input type="text" id="a-cognome" placeholder="ROSSI"></div>
       <div class="field-wrap"><div class="field-label">Nome *</div><input type="text" id="a-nome" placeholder="Giulia"></div>
-      <div class="field-wrap"><div class="field-label">Anno *</div><input type="text" id="a-anno" placeholder="2011"></div>
+      <div class="field-wrap"><div class="field-label">Anno *</div><input type="text" id="a-anno" placeholder="2011">
+    <input type="number" id="a-altezza" placeholder="Altezza (cm)" min="140" max="220" style="width:130px"></div>
       <div class="field-wrap"><div class="field-label">Ultima Societa</div><input type="text" id="a-societa" list="dl-societa" placeholder="es. Visette"></div>
     </div>
     <div class="form-row2">
@@ -1557,6 +1560,7 @@ function openDrawer(id){
   document.getElementById('edit-cognome').value=a.cognome||'';
   document.getElementById('edit-nome').value=a.nome||'';
   document.getElementById('edit-anno').value=a.anno||'';
+  const _ea=document.getElementById('edit-altezza');if(_ea)_ea.value=a.altezza||'';
   document.getElementById('edit-status').value=a.status||'lista';
   const checks=document.querySelectorAll('#edit-ruolo-checks input');
   const ruoliAtleta=(a.ruolo||'').split('/').map(r=>r.trim());
