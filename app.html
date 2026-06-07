@@ -799,7 +799,7 @@ td[title=""] { pointer-events: auto; }
 
   <div class="filters-bar">
     <input style="min-width:150px;max-width:180px" type="text" id="f-search" placeholder="&#x1F50D; Cerca..." oninput="renderTable()">
-    <input style="min-width:130px;max-width:160px" type="text" id="f-societa" placeholder="&#x1F3E0; Società..." oninput="societaFilter=this.value;page=0;renderTable()" title="Filtra per società di provenienza">
+    <input style="min-width:130px;max-width:160px" type="text" id="f-societa" placeholder="&#x1F3E0; Società..." oninput="page=0;renderTable()" title="Filtra per società di provenienza">
     <div class="multi-filter-wrap">
       <button type="button" class="multi-filter-btn" onclick="toggleMultiFilter('anno')" id="btn-multi-anno">Tutti gli anni <span style="font-size:10px">&#x25BC;</span></button>
       <div class="multi-filter-dropdown" id="dd-anno">
@@ -1373,7 +1373,9 @@ function getFiltered(){
       const dests=(a.dest||'').split('|').map(d=>d.trim()).filter(Boolean);
       if(!destChecks.some(dc=>dests.includes(dc)))return false;
     }
-    return true;
+      const sf=(document.getElementById('f-societa')?.value||'').toLowerCase().trim();
+  if(sf&&!(a.societa||'').toLowerCase().includes(sf))return false;
+  return true;
   });
 }
 
