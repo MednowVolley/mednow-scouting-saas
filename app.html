@@ -1936,8 +1936,19 @@ function todoRoster(squadId){selectSquad(squadId);setTimeout(function(){const rs
 async function switchDrawerTab(tab){
   var modBtn=document.getElementById('dtab-modifica'),stoBtn=document.getElementById('dtab-storico');
   var dc=document.getElementById('drawer-content'),ds=document.getElementById('drawer-storico');
-  if(tab==='modifica'){if(dc)dc.style.display='';if(ds)ds.style.display='none';modBtn.style.background='var(--blue)';modBtn.style.color='#fff';modBtn.style.borderColor='var(--blue)';stoBtn.style.background='transparent';stoBtn.style.color='var(--text-sec)';stoBtn.style.borderColor='var(--border)';}
-  else{if(dc)dc.style.display='none';if(ds)ds.style.display='';stoBtn.style.background='var(--blue)';stoBtn.style.color='#fff';stoBtn.style.borderColor='var(--blue)';modBtn.style.background='transparent';modBtn.style.color='var(--text-sec)';modBtn.style.borderColor='var(--border)';var id=parseInt(document.getElementById('edit-id').value);if(id){var logs=await loadAtletaLogs(id);document.getElementById('storico-content').innerHTML=renderLogs(logs);}}
+  if(tab==='modifica'){
+    if(dc)dc.style.display='';
+    if(ds)ds.style.display='none';
+    if(modBtn){modBtn.style.background='var(--blue)';modBtn.style.color='#fff';modBtn.style.borderColor='var(--blue)';}
+    if(stoBtn){stoBtn.style.background='transparent';stoBtn.style.color='var(--text-sec)';stoBtn.style.borderColor='var(--border)';}
+  } else {
+    if(dc)dc.style.display='none';
+    if(ds)ds.style.display='';
+    if(stoBtn){stoBtn.style.background='var(--blue)';stoBtn.style.color='#fff';stoBtn.style.borderColor='var(--blue)';}
+    if(modBtn){modBtn.style.background='transparent';modBtn.style.color='var(--text-sec)';modBtn.style.borderColor='var(--border)';}
+    var id=parseInt(document.getElementById('edit-id').value);
+    if(id){var logs=await loadAtletaLogs(id);var sc=document.getElementById('storico-content');if(sc)sc.innerHTML=renderLogs(logs);}
+  }
 }
 
 const SQUADS = [
