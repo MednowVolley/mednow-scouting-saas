@@ -263,7 +263,7 @@ tbody tr:hover td{background:#EBF4FF}
 .btn-add{display:flex;align-items:center;gap:7px;padding:10px 22px;background:var(--blue);color:#fff;border:none;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit}
 .drawer-overlay{display:none;position:fixed;inset:0;background:rgba(10,22,40,0.55);z-index:100;backdrop-filter:blur(2px)}
 .drawer-overlay.open{display:block}
-.drawer{position:fixed;top:0;right:-420px;width:420px;height:100vh;background:var(--bg-card);z-index:101;box-shadow:-4px 0 24px rgba(10,22,40,0.18);transition:right 0.28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
+.drawer{position:fixed;top:0;right:-560px;width:560px;height:100vh;background:var(--bg-card);z-index:101;box-shadow:-4px 0 24px rgba(10,22,40,0.18);transition:right 0.28s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column}
 .drawer.open{right:0}
 .drawer-header{background:var(--navy);padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--blue);flex-shrink:0}
 .drawer-header h2{font-family:'Barlow',sans-serif;font-weight:800;font-size:15px;color:#fff;text-transform:uppercase}
@@ -961,7 +961,16 @@ td[title=""] { pointer-events: auto; }
     <div class="drawer-field"><label>Altezza (cm)</label><input type="number" id="edit-altezza" min="140" max="220" placeholder="es. 178"></div>
       <div class="drawer-field"><label>Stato</label>
         <select id="edit-status">
-          </select>
+          <option value="lista">In lista</option>
+          <option value="visione">Visionata</option>
+          <option value="in_prova">In prova</option>
+          <option value="trattativa">In trattativa</option>
+          <option value="nuovo_acquisto">Nuovo acquisto</option>
+          <option value="confermata">Confermata</option>
+          <option value="non_confermata">Non confermata</option>
+          <option value="trasferita">Trasferita</option>
+          <option value="no">No</option>
+        </select>
       </div>
     </div>
     <div class="drawer-field">
@@ -989,16 +998,16 @@ td[title=""] { pointer-events: auto; }
     </div>
     <div class="drawer-field">
       <label>Squadra destinazione (multipla)</label>
-      <div style="display:flex;flex-direction:column;gap:6px">
-        <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="checkbox" value="U.19" onchange="updateDestPreview()"> U.19</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="checkbox" value="U.17 A" onchange="updateDestPreview()"> U.17 A</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="checkbox" value="U.17 B" onchange="updateDestPreview()"> U.17 B</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="checkbox" value="U.15 A" onchange="updateDestPreview()"> U.15 A</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="checkbox" value="U.15 B" onchange="updateDestPreview()"> U.15 B</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="checkbox" value="U.14 A" onchange="updateDestPreview()"> U.14 A</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="checkbox" value="U.14 B" onchange="updateDestPreview()"> U.14 B</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="checkbox" value="U.13" onchange="updateDestPreview()"> U.13</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:13px;cursor:pointer"><input type="checkbox" value="U.12" onchange="updateDestPreview()"> U.12</label>
+      <div id="edit-dest-checks" style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:4px">
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:5px 8px;border:1.5px solid var(--border-med);border-radius:14px;cursor:pointer;background:var(--bg);white-space:nowrap"><input type="checkbox" value="U.19" onchange="updateDestPreview()"> U.19</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:5px 8px;border:1.5px solid var(--border-med);border-radius:14px;cursor:pointer;background:var(--bg);white-space:nowrap"><input type="checkbox" value="U.17 A" onchange="updateDestPreview()"> U.17 A</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:5px 8px;border:1.5px solid var(--border-med);border-radius:14px;cursor:pointer;background:var(--bg);white-space:nowrap"><input type="checkbox" value="U.17 B" onchange="updateDestPreview()"> U.17 B</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:5px 8px;border:1.5px solid var(--border-med);border-radius:14px;cursor:pointer;background:var(--bg);white-space:nowrap"><input type="checkbox" value="U.15 A" onchange="updateDestPreview()"> U.15 A</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:5px 8px;border:1.5px solid var(--border-med);border-radius:14px;cursor:pointer;background:var(--bg);white-space:nowrap"><input type="checkbox" value="U.15 B" onchange="updateDestPreview()"> U.15 B</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:5px 8px;border:1.5px solid var(--border-med);border-radius:14px;cursor:pointer;background:var(--bg);white-space:nowrap"><input type="checkbox" value="U.14 A" onchange="updateDestPreview()"> U.14 A</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:5px 8px;border:1.5px solid var(--border-med);border-radius:14px;cursor:pointer;background:var(--bg);white-space:nowrap"><input type="checkbox" value="U.14 B" onchange="updateDestPreview()"> U.14 B</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:5px 8px;border:1.5px solid var(--border-med);border-radius:14px;cursor:pointer;background:var(--bg);white-space:nowrap"><input type="checkbox" value="U.13" onchange="updateDestPreview()"> U.13</label>
+        <label style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:5px 8px;border:1.5px solid var(--border-med);border-radius:14px;cursor:pointer;background:var(--bg);white-space:nowrap"><input type="checkbox" value="U.12" onchange="updateDestPreview()"> U.12</label>
       </div>
       <div style="height:6px;background:var(--border);border-radius:3px;margin-top:6px;overflow:hidden">
         <div id="pct-bar-inner" style="height:100%;border-radius:3px;background:#EF9F27;width:50%"></div>
@@ -1110,32 +1119,19 @@ async function refreshSession(){
 }
 
 async function sbFetch(path,method='GET',body=null,token=null,prefer=null){
-  const preferH=prefer?prefer+';return=representation':'return=representation';
+  const needsRepr=(method==='GET'||method==='POST');
+  const preferH=prefer?prefer:(needsRepr?'return=representation':'return=minimal');
   const makeOpts=(t)=>({method,headers:{'Content-Type':'application/json','apikey':KEY,'Authorization':'Bearer '+t,'Prefer':preferH},...(body?{body:JSON.stringify(body)}:{})});
-  
   let t=token||(currentUser?.access_token)||KEY;
   let r=await fetch(SUPA+path,makeOpts(t));
-  
-  // Se JWT scaduto (401) → refresh automatico e riprova
-  if(r.status===401||r.status===403){
+  if(r.status===401){
     const errText=await r.text();
-    if(errText.includes('JWT')||errText.includes('expired')||errText.includes('invalid')){
-      const refreshed=await refreshSession();
-      if(refreshed){
-        t=currentUser?.access_token||KEY;
-        r=await fetch(SUPA+path,makeOpts(t));
-      } else {
-        // Sessione non rinnovabile: forza logout
-        showToast('Sessione scaduta — effettua il login','error');
-        setTimeout(doLogout,1500);
-        throw new Error('Sessione scaduta');
-      }
-    } else {
-      throw new Error(errText);
-    }
+    const refreshed=await refreshSession();
+    if(refreshed){t=currentUser?.access_token||KEY;r=await fetch(SUPA+path,makeOpts(t));}
+    else{showToast('Sessione scaduta — effettua il login','error');setTimeout(doLogout,1500);throw new Error('Sessione scaduta');}
   }
-  
   if(!r.ok){const e=await r.text();throw new Error(e);}
+  if(r.status===204||method==='DELETE'||method==='PATCH')return true;
   try{return await r.json();}catch{return true;}
 }
 
@@ -1206,12 +1202,13 @@ function renderUserBadge(){
 
 function renderAdminActions(){
   const el=document.getElementById('admin-actions');
-  if(currentProfile?.ruolo==='admin')el.innerHTML='<button class="btn-gestione" onclick="openModal()">&#x1F465; Gestione utenti</button>';
+  if(isSaasAdmin())el.innerHTML='<button class="btn-gestione" onclick="openModal()">&#x1F465; Gestione utenti</button>';
   else el.innerHTML='';
 }
 
 
 // ===== MATRICE PERMESSI =====
+function isSaasAdmin(){return currentProfile?.is_saas_admin===true;}
 function isAdmin(){return currentProfile?.ruolo==='admin';}
 function myClubFilter(){
   // Ritorna il club dell'utente se ha restrizione di visibilità
@@ -1339,15 +1336,10 @@ function appToDB(a){return{id:a.id,cognome:a.cognome,nome:a.nome,anno:a.anno,ruo
 async function saveAthlete(a){
   a.updatedAt=Date.now();
   const payload=appToDB(a);
-  try{
-    await sbFetch('/rest/v1/atlete?id=eq.'+a.id,'PATCH',payload);
-    if(a._fotoChanged===true){
-      try{await sbFetch('/rest/v1/atlete?id=eq.'+a.id,'PATCH',{foto:a.foto||null});}catch(e){console.warn('Foto save:',e);}
-    }
-  }
-  catch{
-    const fp=Object.assign({},payload,{foto:a.foto||null});
-    await sbFetch('/rest/v1/atlete','POST',[fp]);
+  payload.club_id=currentProfile?.club_id||1;
+  await sbFetch('/rest/v1/atlete?id=eq.'+a.id,'PATCH',payload);
+  if(a._fotoChanged===true){
+    try{await sbFetch('/rest/v1/atlete?id=eq.'+a.id,'PATCH',{foto:a.foto||null});}catch(e){console.warn('Foto save:',e);}
   }
   const i=athletes.findIndex(x=>x.id===a.id);
   if(i>=0)athletes[i]=a;else athletes.push(a);
