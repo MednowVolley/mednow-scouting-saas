@@ -2004,7 +2004,7 @@ async function loadRosters(){
 async function _upsertRoster(sid){
   if(!sid)return;
   const r=rosters[sid]||{titolari:{},riserve:{}};
-  await sbFetch('/rest/v1/rosters','POST',[{
+  const payload={
     squad_id:sid,
     titolari:r.titolari||{},
     riserve:r.riserve||{},
@@ -2012,7 +2012,16 @@ async function _upsertRoster(sid){
     updated_by:currentUser?.user?.id||null,
     updated_by_nome:currentProfile?.nome||'',
     club_id:currentProfile?.club_id||1
-  }],null,'resolution=merge-duplicates');
+  };
+  // Prova PATCH prima, poi INSERT se non esiste
+  try{
+    const existing=await sbFetch('/rest/v1/rosters?squad_id=eq.'+sid+'&club_id=eq.'+(currentProfile?.club_id||1),'GET');
+    if(existing&&existing.length>0){
+      await sbFetch('/rest/v1/rosters?squad_id=eq.'+sid+'&club_id=eq.'+(currentProfile?.club_id||1),'PATCH',payload);
+    } else {
+      await sbFetch('/rest/v1/rosters','POST',[payload]);
+    }
+  }catch(e){console.warn('_upsertRoster error:',e);throw e;}
 }
 
 async function saveRosters(){
