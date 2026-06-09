@@ -1960,11 +1960,11 @@ let rosters={},currentSquad='u19p';
 // ===== ROSTER SU SUPABASE =====
 async function loadRosters(){
   try{
-    let rows=await sbFetch('/rest/v1/rosters?select=squad_id,titolari,riserve');
+    let rows=await sbFetch('/rest/v1/rosters?select=squad_id,titolari,riserve,riserve_libere&order=squad_id');
     // Se 0 righe, potrebbe essere JWT scaduto — prova refresh e ricarica
     if(!rows||!rows.length){
       const refreshed=await refreshSession();
-      if(refreshed) rows=await sbFetch('/rest/v1/rosters?select=squad_id,titolari,riserve');
+      if(refreshed) rows=await sbFetch('/rest/v1/rosters?select=squad_id,titolari,riserve,riserve_libere&order=squad_id');
     }
     rosters={};
     if(rows&&rows.length){
@@ -1972,7 +1972,7 @@ async function loadRosters(){
         rosters[r.squad_id]={
           titolari:r.titolari||{},
           riserve:r.riserve||{},
-          riserve_libere:[]
+          riserve_libere:Array.isArray(r.riserve_libere)?r.riserve_libere:[]
         };
       });
     }
