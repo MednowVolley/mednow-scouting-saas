@@ -1,8 +1,17 @@
 // Netlify Function: crea utente Supabase in modo sicuro
 // La service_role key sta SOLO qui, mai nel frontend
+const CORS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'Content-Type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS'
+};
+
 exports.handler = async (event) => {
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers: CORS, body: '' };
+  }
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: JSON.stringify({ error: 'Method not allowed' }) };
+    return { statusCode: 405, headers: CORS, body: JSON.stringify({ error: 'Method not allowed' }) };
   }
 
   const SUPA = 'https://zaxbwqxnrofiggldoahw.supabase.co';
@@ -10,17 +19,17 @@ exports.handler = async (event) => {
   const ANON_KEY = process.env.SUPABASE_ANON_KEY || 'sb_publishable_aS4aRr3OMwWLOT1TmIhGPg_gfY-dwIO';
 
   if (!SERVICE_KEY) {
-    return { statusCode: 500, body: JSON.stringify({ error: 'Service key non configurata' }) };
+    return { statusCode: 500, headers: CORS, body: JSON.stringify({ error: 'Service key non configurata' }) };
   }
 
   try {
     const { email, password, nome, ruolo, societa, authToken } = JSON.parse(event.body);
 
     if (!email || !password || !nome || !ruolo || !authToken) {
-      return { statusCode: 400, body: JSON.stringify({ error: 'Parametri mancanti' }) };
+      return { statusCode: 400, headers: CORS, body: JSON.stringify({ error: 'Parametri mancanti' }) };
     }
     if (password.length < 8) {
-      return { statusCode: 400, body: JSON.stringify({ error: 'Password min. 8 caratteri' }) };
+      return { statusCode: 400, headers: CORS, body: JSON.stringify({ error: 'Password min. 8 caratteri' }) };
     }
 
     // 1. Verifica che il chiamante sia autenticato e admin
@@ -29,7 +38,7 @@ exports.handler = async (event) => {
     });
     const caller = await userRes.json();
     if (!caller?.id) {
-      return { statusCode: 401, body: JSON.stringify({ error: 'Non autenticato' }) };
+      return { statusCode: 401, headers: CORS, body: JSON.stringify({ error: 'Non autenticato' }) };
     }
 
     // 2. Verifica ruolo admin del chiamante
@@ -39,7 +48,7 @@ exports.handler = async (event) => {
     const profiles = await profileRes.json();
     const callerProfile = profiles?.[0];
     if (!callerProfile || (callerProfile.ruolo !== 'admin' && !callerProfile.is_saas_admin)) {
-      return { statusCode: 403, body: JSON.stringify({ error: 'Solo gli admin possono creare utenti' }) };
+      return { statusCode: 403, headers: CORS, body: JSON.stringify({ error: 'Solo gli admin possono creare utenti' }) };
     }
 
     // 3. Crea utente auth
@@ -50,7 +59,7 @@ exports.handler = async (event) => {
     });
     const newUser = await createRes.json();
     if (!newUser?.id) {
-      return { statusCode: 400, body: JSON.stringify({ error: newUser?.msg || 'Errore creazione utente' }) };
+      return { statusCode: 400, headers: CORS, body: JSON.stringify({ error: newUser?.msg || 'Errore creazione utente' }) };
     }
 
     // 4. Crea profilo - club_id ereditato dal chiamante (isolamento multi-tenant)
@@ -67,8 +76,8 @@ exports.handler = async (event) => {
     });
     const inserted = await insRes.json();
 
-    return { statusCode: 200, body: JSON.stringify({ success: true, user: inserted?.[0] || profilePayload }) };
+    return { statusCode: 200, headers: CORS, body: JSON.stringify({ success: true, user: inserted?.[0] || profilePayload }) };
   } catch (e) {
-    return { statusCode: 500, body: JSON.stringify({ error: e.message }) };
+    return { statusCode: 500, headers: CORS, body: JSON.stringify({ error: e.message }) };
   }
 };
