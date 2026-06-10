@@ -928,6 +928,15 @@ td[title=""] { pointer-events: auto; }
     </div>
   </div>
 
+  <!-- ELENCO SQUADRA COMPLETO -->
+  <div class="roster-panel" style="margin-top:1rem">
+    <div class="roster-panel-header" style="background:var(--navy)">
+      <h3>&#x1F465; Elenco squadra</h3>
+      <span style="font-size:10px;background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);padding:2px 8px;border-radius:10px" id="elenco-count">0</span>
+    </div>
+    <div id="elenco-squadra" style="padding:12px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px"></div>
+  </div>
+
 <!-- DRAWER -->
 <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
 <div class="drawer" id="edit-drawer">
@@ -2101,6 +2110,39 @@ function renderCourt(titolariSlots,r){
   document.getElementById('titolari-slots').innerHTML=h;
 }
 
+function renderElencoSquadra(){
+  const el=document.getElementById('elenco-squadra');
+  const cnt=document.getElementById('elenco-count');
+  if(!el)return;
+  const squad=SQUADS.find(s=>s.id===currentSquad);
+  if(!squad){el.innerHTML='';return;}
+  const sa=getSquadAthletes(squad.label).sort((a,b)=>{
+    const ro={'P':0,'O':1,'C':2,'S':3,'B':3,'L':4};
+    const ra=ro[getShortRole(a.ruolo)]??5, rb=ro[getShortRole(b.ruolo)]??5;
+    if(ra!==rb)return ra-rb;
+    return (a.cognome+a.nome).localeCompare(b.cognome+b.nome);
+  });
+  if(cnt)cnt.textContent=sa.length;
+  if(!sa.length){el.innerHTML='<div style="grid-column:1/-1;text-align:center;padding:1.5rem;color:var(--text-ter);font-size:13px">Nessuna atleta assegnata a questa squadra</div>';return;}
+  el.innerHTML=sa.map(a=>{
+    const bg=getRoleColor(a.ruolo);
+    const stBg=CONFIRMED.includes(a.status)?'#D1FAE5':a.status==='trattativa'?'#FFEDD5':'#E0F2FE';
+    const stCol=CONFIRMED.includes(a.status)?'#065F46':a.status==='trattativa'?'#9A3412':'#0369A1';
+    const avatarInner=a.foto
+      ?'<img src="'+a.foto+'" style="width:100%;height:100%;object-fit:cover;object-position:50% 20%;display:block">'
+      :'<span style="font-family:Barlow,sans-serif;font-weight:800;font-size:16px;color:#fff">'+getInitials(a.cognome,a.nome)+'</span>';
+    return '<div onclick="openDrawer('+a.id+')" style="display:flex;align-items:center;gap:10px;padding:8px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);cursor:pointer;transition:background .12s" onmouseover="this.style.background=\'#F0F6FF\'" onmouseout="this.style.background=\'var(--bg-card)\'">'
+      +'<div style="width:46px;height:46px;border-radius:50%;overflow:hidden;border:2px solid '+bg+';background:'+bg+';display:flex;align-items:center;justify-content:center;flex-shrink:0">'+avatarInner+'</div>'
+      +'<div style="flex:1;min-width:0">'
+      +'<div style="font-size:13px;font-weight:700;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><span style="font-family:Barlow,sans-serif">'+esc(a.cognome)+'</span> <span style="font-weight:400">'+esc(a.nome)+'</span></div>'
+      +'<div style="display:flex;align-items:center;gap:5px;margin-top:2px;flex-wrap:wrap">'
+      +'<span style="font-size:10px;font-weight:700;color:#fff;background:'+bg+';padding:1px 7px;border-radius:8px">'+esc(a.ruolo||'—')+'</span>'
+      +'<span style="font-size:10px;color:var(--text-ter)">'+esc(a.anno||'')+'</span>'
+      +'</div></div>'
+      +'<span style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:10px;background:'+stBg+';color:'+stCol+';white-space:nowrap;flex-shrink:0">'+(SL[a.status]||a.status)+'</span>'
+      +'</div>';
+  }).join('');
+}
 function selectSquad(sid){currentSquad=sid;renderSquadTabs();renderRoster();}
 function getSiblingSquadId(squadId){
   // Trova il gruppo gemello: A↔B
@@ -2162,7 +2204,7 @@ function renderRoster(){
       +'<div class="riserva-right"><span style="font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;background:'+stBg+';color:'+stCol+'">'+( SL[a.status]||a.status)+'</span>'
       +'<button class="slot-remove" onclick="removeRiservaSlot(&#39;'+slot.key+'&#39;)">&#x2715;</button></div></div>';
   }).join('');
-  renderPool();renderSummary(getSquadAthletes(squad.label),r);
+  renderPool();renderSummary(getSquadAthletes(squad.label),r);renderElencoSquadra();
 }
 let pendingSlotRole=null;
 function showPoolForSlot(role){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster","error");return;}pendingSlotRole=role;pendingSlotKey=null;setPoolFilter(role);}
