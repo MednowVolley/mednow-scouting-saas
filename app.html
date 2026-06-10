@@ -908,6 +908,9 @@ td[title=""] { pointer-events: auto; }
         <h3>&#x1F464; Atlete disponibili</h3>
         <span id="pool-count" style="font-size:10px;background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);padding:2px 8px;border-radius:10px">0</span>
       </div>
+      <div style="padding:8px 8px 0">
+        <input type="text" id="pool-search" placeholder="&#x1F50D; Cerca atleta..." oninput="renderPool()" style="width:100%;font-size:13px;padding:8px 10px;border:1px solid var(--border-med);border-radius:var(--radius-sm);font-family:inherit;color:var(--text);background:var(--bg-card);outline:none;box-sizing:border-box">
+      </div>
       <div style="padding:8px;display:flex;gap:6px;flex-wrap:wrap" id="pool-filter-btns">
         <button id="pf-all" class="pool-filter-btn active" onclick="setPoolFilter('all')">Tutte</button>
         <button id="pf-P" class="pool-filter-btn" onclick="setPoolFilter('P')">Palleg.</button>
@@ -2258,7 +2261,12 @@ function renderPool(){
   const squad=getActiveSquads().find(s=>s.id===currentSquad);
   const sa=getSquadAthletes(squad.label);
   const assignedIds=getAssignedIds();
-  const filtered=sa.filter(a=>poolFilter==='all'||roleMatch(a.ruolo,poolFilter));
+  const pq=(document.getElementById('pool-search')?.value||'').toLowerCase().trim();
+  const filtered=sa.filter(a=>{
+    if(poolFilter!=='all'&&!roleMatch(a.ruolo,poolFilter))return false;
+    if(pq&&!((a.cognome||'')+' '+(a.nome||'')).toLowerCase().includes(pq))return false;
+    return true;
+  });
   document.getElementById('pool-count').textContent=filtered.length+' atlete';
   const list=document.getElementById('pool-list');
   if(!filtered.length){list.innerHTML='<div style="text-align:center;padding:2rem;color:var(--text-ter);font-size:13px">Nessuna atleta disponibile</div>';return;}
