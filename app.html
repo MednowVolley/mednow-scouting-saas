@@ -1096,7 +1096,7 @@ window.SUPA_KEY='sb_publishable_aS4aRr3OMwWLOT1TmIhGPg_gfY-dwIO';
 const SUPA='https://zaxbwqxnrofiggldoahw.supabase.co';
 const KEY='sb_publishable_aS4aRr3OMwWLOT1TmIhGPg_gfY-dwIO';
 let currentUser=null,currentProfile=null,athletes=[],page=0,currentSort='priority',poolFilter='all';
-const PER_PAGE=30;
+const PER_PAGE=10;
 const SL={nuovo_acquisto:'Nuovo acquisto',confermata:'Confermata',in_prova:'In prova',non_confermata:'Non confermata',trasferita_aspes:'Trasferita',visione:'Visionata',lista:'In lista',trattativa:'In trattativa',no:'No'};
 const SC={nuovo_acquisto:'s-nuovo-acquisto',confermata:'s-confermata',in_prova:'s-in-prova',non_confermata:'s-non-confermata',trasferita_aspes:'s-trasferita',visione:'s-visione',lista:'s-lista',trattativa:'s-trattativa',no:'s-no'};
 const CYCLE=['lista','visione','in_prova','trattativa','nuovo_acquisto','confermata','non_confermata','trasferita_aspes','no'];
@@ -2116,7 +2116,13 @@ function renderElencoSquadra(){
   if(!squad){el.innerHTML='';return;}
   const sa=getSquadAthletes(squad.label);
   if(cnt)cnt.textContent=sa.length;
-  // Organico: 2 P, 4 C, 4 B, 2 O, 2 L
+  const r=getRoster(currentSquad);
+  // Mappa atletaId -> {role, prio} dalle assegnazioni roster
+  const SLOT_ROLE={p1:'P',o1:'O',c1:'C',c2:'C',s1:'B',s2:'B',l1:'L',
+    ris_p2:'P',ris_s3:'B',ris_s4:'B',ris_c3:'C',ris_c4:'C',ris_o2:'O',ris_l2:'L'};
+  const assigned={};
+  Object.entries(r.titolari||{}).forEach(([k,aid])=>{if(aid&&SLOT_ROLE[k])assigned[aid]={role:SLOT_ROLE[k],prio:0};});
+  Object.entries(r.riserve||{}).forEach(([k,aid])=>{if(aid&&SLOT_ROLE[k]&&!assigned[aid])assigned[aid]={role:SLOT_ROLE[k],prio:1};});
   const ORGANICO=[
     {role:'P',label:'Palleggiatrici',slots:2,color:'#0F6E56'},
     {role:'C',label:'Centrali',slots:4,color:'#6B21A8'},
@@ -2127,14 +2133,19 @@ function renderElencoSquadra(){
   const used=new Set();
   let html='';
   ORGANICO.forEach(grp=>{
-    // Atlete che matchano il ruolo, ordinate per rating decrescente
-    const matching=sa.filter(a=>!used.has(a.id)&&roleMatch(a.ruolo||'',grp.role))
+    // 1. Atlete assegnate nel roster a questo ruolo (titolari prio 0, riserve prio 1)
+    const fromRoster=sa.filter(a=>!used.has(a.id)&&assigned[a.id]&&assigned[a.id].role===grp.role)
+      .sort((x,y)=>assigned[x.id].prio-assigned[y.id].prio||(y.rating||0)-(x.rating||0));
+    // 2. Altre che matchano per ruolo anagrafico (escluse quelle assegnate ad ALTRI ruoli nel roster)
+    const others=sa.filter(a=>!used.has(a.id)&&!assigned[a.id]&&roleMatch(a.ruolo||'',grp.role))
       .sort((x,y)=>(y.rating||0)-(x.rating||0)||(x.cognome+x.nome).localeCompare(y.cognome+y.nome));
+    const matching=[...fromRoster,...others];
     html+='<div style="font-size:10px;font-weight:800;color:'+grp.color+';text-transform:uppercase;letter-spacing:.08em;padding:8px 2px 3px;border-bottom:2px solid '+grp.color+';margin-bottom:4px;display:flex;justify-content:space-between"><span>'+grp.label+'</span><span style="opacity:.6">'+Math.min(matching.length,grp.slots)+'/'+grp.slots+'</span></div>';
     for(let i=0;i<grp.slots;i++){
       const a=matching[i];
       if(a){
         used.add(a.id);
+        const tag=assigned[a.id]?(assigned[a.id].prio===0?'<span style="font-size:8px;font-weight:800;background:'+grp.color+';color:#fff;padding:1px 6px;border-radius:8px;margin-left:4px">TITOLARE</span>':'<span style="font-size:8px;font-weight:700;background:#E5E7EB;color:#374151;padding:1px 6px;border-radius:8px;margin-left:4px">RISERVA</span>'):'';
         const stBg=CONFIRMED.includes(a.status)?'#D1FAE5':a.status==='trattativa'?'#FFEDD5':'#E0F2FE';
         const stCol=CONFIRMED.includes(a.status)?'#065F46':a.status==='trattativa'?'#9A3412':'#0369A1';
         const avatarInner=a.foto
@@ -2143,7 +2154,7 @@ function renderElencoSquadra(){
         html+='<div onclick="openDrawer('+a.id+')" style="display:flex;align-items:center;gap:10px;padding:7px 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg-card);cursor:pointer" onmouseover="this.style.background=\'#F0F6FF\'" onmouseout="this.style.background=\'var(--bg-card)\'">'
           +'<div style="width:42px;height:42px;border-radius:50%;overflow:hidden;border:2px solid '+grp.color+';background:'+grp.color+';display:flex;align-items:center;justify-content:center;flex-shrink:0">'+avatarInner+'</div>'
           +'<div style="flex:1;min-width:0">'
-          +'<div style="font-size:13px;font-weight:700;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><span style="font-family:Barlow,sans-serif">'+esc(a.cognome)+'</span> <span style="font-weight:400">'+esc(a.nome)+'</span></div>'
+          +'<div style="font-size:13px;font-weight:700;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><span style="font-family:Barlow,sans-serif">'+esc(a.cognome)+'</span> <span style="font-weight:400">'+esc(a.nome)+'</span>'+tag+'</div>'
           +'<div style="display:flex;align-items:center;gap:6px;margin-top:1px">'
           +'<span style="font-size:10px;color:var(--text-ter)">'+esc(a.anno||'')+'</span>'
           +(a.rating?'<span style="font-size:10px;color:#F59E0B;font-weight:700">&#x2605;'+a.rating+'</span>':'')
@@ -2159,7 +2170,6 @@ function renderElencoSquadra(){
       }
     }
   });
-  // Atlete non assegnate a nessuno slot (extra organico)
   const extra=sa.filter(a=>!used.has(a.id));
   if(extra.length){
     html+='<div style="font-size:10px;font-weight:800;color:var(--text-ter);text-transform:uppercase;letter-spacing:.08em;padding:8px 2px 3px;border-bottom:2px solid var(--border-med);margin-bottom:4px">Fuori organico ('+extra.length+')</div>';
