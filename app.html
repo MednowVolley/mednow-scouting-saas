@@ -1706,15 +1706,13 @@ async function addUser(){
   if(!nome||!email||!password){showToast('Compila tutti i campi','error');return;}
   if(password.length<8){showToast('Password min. 8 caratteri','error');return;}
   try{
-    const SKEY='REMOVED_SERVICE_KEY';
-    const res=await fetch(SUPA+'/auth/v1/admin/users',{
+    const res=await fetch('/.netlify/functions/create-user',{
       method:'POST',
-      headers:{'Content-Type':'application/json','apikey':SKEY,'Authorization':'Bearer '+SKEY},
-      body:JSON.stringify({email,password,email_confirm:true})
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({email,password,nome,ruolo,societa,authToken:currentUser?.access_token})
     });
     const data=await res.json();
-    if(!data.id)throw new Error(data.msg||data.error_description||'Errore creazione utente');
-    await sbFetch('/rest/v1/utenti','POST',[{id:data.id,email,nome,ruolo,societa,attivo:true}]);
+    if(!res.ok||!data.success)throw new Error(data.error||'Errore creazione utente');
     ['u-nome','u-email','u-password'].forEach(id=>document.getElementById(id).value='');
     await loadUtenti();showToast('Utente '+nome+' creato ✓','success');
   }catch(e){showToast('Errore: '+e.message,'error');}
