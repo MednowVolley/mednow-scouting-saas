@@ -1346,8 +1346,8 @@ async function loadAthletes(){
 }
 
 function setSyncPill(s,t){const p=document.getElementById('sync-pill');p.className='sync-pill '+s;p.innerHTML=t;}
-function dbToApp(r){return{id:r.id,cognome:r.cognome,nome:r.nome,anno:r.anno||'',ruolo:r.ruolo||'',societa:r.societa||'',status:r.status||'lista',agente:r.agente||'',note:r.note||'',dest:r.dest||'',rating:r.rating||0,pct:r.pct||50,telefono:r.telefono||'',foto:r.foto||null,createdAt:r.created_at||0,updatedAt:r.updated_at||0};}
-function appToDB(a){return{id:a.id,cognome:a.cognome,nome:a.nome,anno:a.anno,ruolo:a.ruolo||null,societa:a.societa||null,status:a.status||'lista',agente:a.agente||null,note:a.note||null,dest:a.dest||null,telefono:a.telefono||null,rating:a.rating||0,pct:a.pct||50,created_at:a.createdAt||Date.now(),updated_at:Date.now()};}
+function dbToApp(r){return{id:r.id,cognome:r.cognome,nome:r.nome,anno:r.anno||'',ruolo:r.ruolo||'',societa:r.societa||'',status:r.status||'lista',agente:r.agente||'',note:r.note||'',dest:r.dest||'',rating:r.rating||0,pct:r.pct||50,telefono:r.telefono||'',altezza:r.altezza||null,foto:r.foto||null,createdAt:r.created_at||0,updatedAt:r.updated_at||0};}
+function appToDB(a){return{id:a.id,cognome:a.cognome,nome:a.nome,anno:a.anno,ruolo:a.ruolo||null,societa:a.societa||null,status:a.status||'lista',agente:a.agente||null,note:a.note||null,dest:a.dest||null,telefono:a.telefono||null,altezza:a.altezza||null,rating:a.rating||0,pct:a.pct||50,created_at:a.createdAt||Date.now(),updated_at:Date.now()};}
 
 async function saveAthlete(a){
   a.updatedAt=Date.now();
@@ -1507,6 +1507,7 @@ async function addAthlete(){
     note:(g('a-note')?.value||'').trim(),
     dest:'',
     rating:parseInt(g('a-rating')?.value)||0,
+    altezza:parseInt(g('a-altezza')?.value)||null,
     pct:50,club_id:currentProfile?.club_id||1,created_at:now,updated_at:now};
   const btn=g('btn-add-submit');
   if(btn){btn.disabled=true;btn.textContent='Salvataggio...';}
@@ -1515,7 +1516,7 @@ async function addAthlete(){
     if(!result||result.error){throw new Error(result?.message||result?.error||'Errore sconosciuto');}
     const newA=result[0]?dbToApp(result[0]):{...payload,id:Date.now(),createdAt:now,updatedAt:now};
     athletes.push(newA);
-    ['a-cognome','a-nome','a-anno','a-societa','a-note'].forEach(id=>{if(g(id))g(id).value='';});
+    ['a-cognome','a-nome','a-anno','a-societa','a-note','a-altezza'].forEach(id=>{if(g(id))g(id).value='';});
     if(g('a-status'))g('a-status').value='lista';
     if(g('a-agente'))g('a-agente').value='';
     document.querySelectorAll('#add-ruolo-checks input').forEach(cb=>cb.checked=false);
@@ -1632,6 +1633,8 @@ async function saveDrawer(){
   a.note=document.getElementById('edit-note').value.trim();
   const telEl=document.getElementById('edit-telefono');
   if(telEl)a.telefono=telEl.value.trim();
+  const altEl=document.getElementById('edit-altezza');
+  if(altEl)a.altezza=parseInt(altEl.value)||null;
   const fotoEl2=document.getElementById('edit-foto');
   if(fotoEl2){
     const nf=fotoEl2.value||null;
@@ -1776,7 +1779,7 @@ function removePhoto(){
   document.getElementById('btn-remove-foto').style.display='none';
 }
 
-const CAMPO_LABELS={status:'Stato',rating:'Voto',note:'Note',dest:'Squadra dest.',ruolo:'Ruolo',pct:'% trattativa',telefono:'Telefono',agente:'Agente',societa:'Società',anno:'Anno',cognome:'Cognome',nome:'Nome'};
+const CAMPO_LABELS={status:'Stato',rating:'Voto',note:'Note',dest:'Squadra dest.',ruolo:'Ruolo',pct:'% trattativa',telefono:'Telefono',agente:'Agente',societa:'Società',anno:'Anno',cognome:'Cognome',nome:'Nome',altezza:'Altezza'};
 const STATUS_LABELS={nuovo_acquisto:'Nuovo acquisto',confermata:'Confermata',in_prova:'In prova',trattativa:'In trattativa',visione:'Visionata',non_confermata:'Non confermata',trasferita_aspes:'Trasferita',lista:'In lista',no:'No'};
 async function saveLog(atletaId,atletaNome,campiCambiati){
   if(!campiCambiati.length)return;
@@ -1784,7 +1787,7 @@ async function saveLog(atletaId,atletaNome,campiCambiati){
   try{await sbFetch('/rest/v1/logs','POST',logs);}catch(e){console.warn('Log:',e);}
 }
 function diffAtleta(prima,dopo){
-  const campi=['status','rating','note','dest','ruolo','pct','telefono','agente','societa'];
+  const campi=['status','rating','note','dest','ruolo','pct','telefono','agente','societa','altezza'];
   return campi.filter(k=>String(prima[k]||'')!==String(dopo[k]||'')).map(k=>({campo:k,prima:k==='status'?(STATUS_LABELS[prima[k]]||prima[k]||'—'):String(prima[k]||'—'),dopo:k==='status'?(STATUS_LABELS[dopo[k]]||dopo[k]||'—'):String(dopo[k]||'—')}));
 }
 async function loadAtletaLogs(atletaId){
