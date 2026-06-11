@@ -171,24 +171,36 @@ async function loadData() {
         const cls = c.giorni_rimasti > 3 ? 'days-ok' : c.giorni_rimasti > 0 ? 'days-warn' : 'days-exp';
         giorniHtml = `<span class="${cls}">${c.giorni_rimasti > 0 ? c.giorni_rimasti + 'gg' : 'Scaduto'}</span>`;
       }
-      return `<tr>
-        <td><div class="club-name">${c.nome||'—'}</div><div class="club-email">${c.admin_email}</div></td>
+      const protetto = [1,7].includes(c.id);
+      const azioni = protetto ? '<span style="color:rgba(255,255,255,0.3);font-size:11px">protetto</span>' : `
+          <button class="action-btn" onclick="extendTrial(${c.id})">+7gg</button>
+          ${c.attivo
+            ? `<button class="action-btn" style="border-color:rgba(255,107,107,0.4);color:#FF6B6B" onclick="suspendClub(${c.id},'${(c.nome||'').replace(/'/g,"\\'")}')">Sospendi</button>`
+            : `<button class="action-btn" style="border-color:rgba(93,202,165,0.4);color:#5DCAA5" onclick="activateClub(${c.id})">Riattiva</button>`}
+          <select class="action-btn" style="padding:4px" onchange="if(this.value){changePlan(${c.id},this.value);this.value='';}">
+            <option value="">Piano…</option>
+            <option value="trial">Trial</option>
+            <option value="starter">Starter €29</option>
+            <option value="club">Club €79</option>
+            <option value="pro">Pro</option>
+          </select>`;
+      return `<tr style="${!c.attivo?'opacity:.45':''}">
+        <td><div class="club-name">${c.nome||'—'}${!c.attivo?' <span style="color:#FF6B6B;font-size:10px">(sospeso)</span>':''}</div><div class="club-email">${c.admin_email}</div></td>
         <td>${c.admin_nome||'—'}</td>
         <td><span class="badge ${pianoClass}">${c.piano||'trial'}</span></td>
+        <td style="text-align:center">${c.n_atlete??'—'}</td>
+        <td style="text-align:center">${c.n_utenti??'—'}</td>
         <td>${scadenza}</td>
         <td>${giorniHtml}</td>
-        <td>${c.stripe_customer_id ? '<span style="color:#5DCAA5;font-size:11px">✓ Stripe</span>' : '<span style="color:rgba(255,255,255,0.3);font-size:11px">—</span>'}</td>
         <td>${new Date(c.created_at).toLocaleDateString('it-IT')}</td>
-        <td>
-          <button class="action-btn" onclick="extendTrial(${c.id})">+7gg</button>
-        </td>
+        <td style="white-space:nowrap">${azioni}</td>
       </tr>`;
     }).join('');
 
     document.getElementById('table-container').innerHTML = `
       <table>
         <thead><tr>
-          <th>Club</th><th>Admin</th><th>Piano</th><th>Scadenza</th><th>Giorni</th><th>Stripe</th><th>Registrato</th><th>Azioni</th>
+          <th>Club</th><th>Admin</th><th>Piano</th><th>Atlete</th><th>Utenti</th><th>Scadenza</th><th>Giorni</th><th>Registrato</th><th>Azioni</th>
         </tr></thead>
         <tbody>${rows}</tbody>
       </table>`;
@@ -199,15 +211,29 @@ async function loadData() {
   }
 }
 
-async function extendTrial(clubId) {
-  const ok = confirm('Estendere il trial di 7 giorni per questo club?');
-  if (!ok) return;
+async function adminAction(payload, msg) {
   const r = await fetch('/.netlify/functions/get-admin-data', {
     method: 'POST',
     headers: { 'x-admin-token': adminToken, 'Content-Type': 'application/json' },
-    body: JSON.stringify({ action: 'extend_trial', club_id: clubId })
+    body: JSON.stringify(payload)
   });
-  if (r.ok) { alert('Trial esteso!'); loadData(); }
+  if (r.ok) { if(msg)alert(msg); loadData(); }
+  else { const d = await r.json().catch(()=>({})); alert('Errore: '+(d.error||r.status)); }
+}
+async function extendTrial(clubId) {
+  if (!confirm('Estendere il trial di 7 giorni per questo club?')) return;
+  adminAction({ action: 'extend_trial', club_id: clubId }, 'Trial esteso!');
+}
+async function suspendClub(clubId, nome) {
+  if (!confirm('Sospendere "'+nome+'"? Gli utenti del club non potranno più accedere.')) return;
+  adminAction({ action: 'suspend', club_id: clubId }, 'Club sospeso.');
+}
+async function activateClub(clubId) {
+  adminAction({ action: 'activate', club_id: clubId }, 'Club riattivato.');
+}
+async function changePlan(clubId, piano) {
+  if (!confirm('Cambiare il piano in "'+piano+'"?')) return;
+  adminAction({ action: 'change_plan', club_id: clubId, piano: piano });
 }
 </script>
 </body>
