@@ -865,7 +865,7 @@ td[title=""] { pointer-events: auto; }
   <div class="table-wrap">
     <table>
       <thead><tr>
-        <th>Cognome e Nome</th><th>Anno</th><th>Ultima Societa</th><th>Ruolo</th>
+        <th>Cognome e Nome</th><th>Anno</th><th>Alt.</th><th>Ultima Societa</th><th>Ruolo</th>
         <th>Stato</th><th>Squadra Dest.</th><th>Agente</th><th>Note</th>
         <th>&#x2605;</th><th>Aggiornato</th><th style="width:40px"></th>
       </tr></thead>
@@ -1443,7 +1443,7 @@ function renderTable(){
   document.getElementById('btn-prev').disabled=page===0;
   document.getElementById('btn-next').disabled=page>=totalPages-1;
   const tbody=document.getElementById('table-body');
-  if(!slice.length){tbody.innerHTML='<tr><td colspan="11" style="text-align:center;padding:2rem;color:var(--text-ter)">Nessuna atleta trovata</td></tr>';return;}
+  if(!slice.length){tbody.innerHTML='<tr><td colspan="12" style="text-align:center;padding:2rem;color:var(--text-ter)">Nessuna atleta trovata</td></tr>';return;}
   tbody.innerHTML=slice.map(a=>{
     const deletable=canDeleteAthlete(a);
     const destClass=(a.dest||'').includes('Aspes')?'aspes':(a.dest||'').includes('PGS')?'pgs':'';
@@ -1454,6 +1454,7 @@ function renderTable(){
     return `<tr data-id="${a.id}"${editable?` onclick="openDrawer(${a.id})"`:''}>
       <td class="name-cell">${isNew?'<span class="new-badge">NEW</span>':isNuova?'<span class="nuova-badge">Nuova</span>':''}<span style="display:inline-flex;align-items:center;gap:8px"><span class="riserva-avatar-wrap" onclick="event.stopPropagation()">${renderAvatar(a,34)}${a.foto?`<div class="riserva-preview"><img src="${a.foto}"><div class="riserva-preview-name">${esc(a.cognome)}</div></div>`:''}</span><span><span style="font-family:'Barlow',sans-serif">${esc(a.cognome)}</span> <span style="font-weight:400">${esc(a.nome)}</span></span></span></td>
       <td><strong>${esc(a.anno)}</strong></td>
+      <td>${a.altezza?`<span style="font-size:12px;font-weight:600;color:var(--navy)">${a.altezza}<span style="font-size:9px;color:var(--text-ter);font-weight:400"> cm</span></span>`:'<span style="color:var(--text-ter);font-size:11px">—</span>'}</td>
       <td style="font-size:11px;color:var(--text-sec)" title="">${esc(a.societa||'—')}</td>
       <td><span class="role-badge" title="">${esc(a.ruolo||'—')}</span></td>
       <td><button class="pill ${SC[a.status]||'s-lista'}" onclick="event.stopPropagation();${editable?'cycleStatus('+a.id+')':''}">${SL[a.status]||a.status}</button>${pctHtml}</td>
