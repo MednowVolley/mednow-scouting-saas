@@ -935,7 +935,11 @@ td[title=""] { pointer-events: auto; }
   <div class="roster-panel" style="margin-top:1rem">
     <div class="roster-panel-header" style="background:var(--navy)">
       <h3>&#x1F465; Elenco squadra</h3>
-      <span style="font-size:10px;background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);padding:2px 8px;border-radius:10px" id="elenco-count">0</span>
+      <div style="display:flex;align-items:center;gap:8px">
+        <button onclick="printElencoSquadra()" style="font-size:11px;font-weight:600;padding:4px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.1);color:#fff;cursor:pointer;font-family:inherit">&#x1F5A8; Stampa / PDF</button>
+        <button onclick="exportElencoCSV()" style="font-size:11px;font-weight:600;padding:4px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.25);background:rgba(255,255,255,0.1);color:#fff;cursor:pointer;font-family:inherit">&#x2B07; CSV</button>
+        <span style="font-size:10px;background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);padding:2px 8px;border-radius:10px" id="elenco-count">0</span>
+      </div>
     </div>
     <div id="elenco-squadra" style="padding:12px;display:flex;flex-direction:column;gap:6px;max-width:560px"></div>
   </div>
@@ -2190,6 +2194,107 @@ function renderElencoSquadra(){
     });
   }
   el.innerHTML=html;
+}
+function buildElencoData(){
+  const squad=SQUADS.find(s=>s.id===currentSquad);
+  if(!squad)return null;
+  const sa=getSquadAthletes(squad.label);
+  const r=getRoster(currentSquad);
+  const SLOT_ROLE={p1:'P',o1:'O',c1:'C',c2:'C',s1:'B',s2:'B',l1:'L',
+    ris_p2:'P',ris_s3:'B',ris_s4:'B',ris_c3:'C',ris_c4:'C',ris_o2:'O',ris_l2:'L'};
+  const assigned={};
+  Object.entries(r.titolari||{}).forEach(([k,aid])=>{if(aid&&SLOT_ROLE[k])assigned[aid]={role:SLOT_ROLE[k],prio:0};});
+  Object.entries(r.riserve||{}).forEach(([k,aid])=>{if(aid&&SLOT_ROLE[k]&&!assigned[aid])assigned[aid]={role:SLOT_ROLE[k],prio:1};});
+  const ORGANICO=[
+    {role:'P',label:'Palleggiatrici',slots:2},
+    {role:'C',label:'Centrali',slots:4},
+    {role:'B',label:'Bande',slots:4},
+    {role:'O',label:'Opposti',slots:2},
+    {role:'L',label:'Liberi',slots:2}
+  ];
+  const used=new Set();
+  const groups=[];
+  ORGANICO.forEach(grp=>{
+    const fromRoster=sa.filter(a=>!used.has(a.id)&&assigned[a.id]&&assigned[a.id].role===grp.role)
+      .sort((x,y)=>assigned[x.id].prio-assigned[y.id].prio||(y.rating||0)-(x.rating||0));
+    const others=sa.filter(a=>!used.has(a.id)&&!assigned[a.id]&&roleMatch(a.ruolo||'',grp.role))
+      .sort((x,y)=>(y.rating||0)-(x.rating||0)||(x.cognome+x.nome).localeCompare(y.cognome+y.nome));
+    const matching=[...fromRoster,...others].slice(0,grp.slots);
+    matching.forEach(a=>used.add(a.id));
+    groups.push({label:grp.label,slots:grp.slots,atlete:matching.map(a=>({...a,_tag:assigned[a.id]?(assigned[a.id].prio===0?'TITOLARE':'RISERVA'):''}))});
+  });
+  const extra=sa.filter(a=>!used.has(a.id)).sort((x,y)=>(x.cognome+x.nome).localeCompare(y.cognome+y.nome));
+  return {squad,groups,extra,total:sa.length};
+}
+function printElencoSquadra(){
+  const data=buildElencoData();
+  if(!data){showToast('Nessuna squadra selezionata','error');return;}
+  const today=new Date().toLocaleDateString('it-IT',{day:'2-digit',month:'2-digit',year:'numeric'});
+  let body='';
+  data.groups.forEach(g=>{
+    body+='<div class="grp">'+g.label.toUpperCase()+' <span class="grp-n">'+g.atlete.length+'/'+g.slots+'</span></div>';
+    g.atlete.forEach(a=>{
+      const ph=a.foto?'<img src="'+a.foto+'" class="ph">':'<div class="ph ph-init">'+getInitials(a.cognome,a.nome)+'</div>';
+      body+='<div class="row">'+ph+'<div class="info"><b>'+esc(a.cognome)+'</b> '+esc(a.nome)
+        +(a._tag?' <span class="tag '+(a._tag==='TITOLARE'?'tit':'ris')+'">'+a._tag+'</span>':'')
+        +'<div class="sub">'+esc(a.anno||'')+(a.rating?' &middot; &#9733;'+a.rating:'')+' &middot; '+esc(a.ruolo||'&mdash;')+'</div></div>'
+        +'<span class="st">'+(SL[a.status]||a.status)+'</span></div>';
+    });
+    for(let i=g.atlete.length;i<g.slots;i++){
+      body+='<div class="row empty"><div class="ph ph-empty"></div><div class="info" style="font-style:italic;color:#999">Posto disponibile</div></div>';
+    }
+  });
+  if(data.extra.length){
+    body+='<div class="grp" style="color:#888;border-color:#ccc">FUORI ORGANICO ('+data.extra.length+')</div>';
+    data.extra.forEach(a=>{
+      const ph=a.foto?'<img src="'+a.foto+'" class="ph">':'<div class="ph ph-init">'+getInitials(a.cognome,a.nome)+'</div>';
+      body+='<div class="row">'+ph+'<div class="info"><b>'+esc(a.cognome)+'</b> '+esc(a.nome)+'<div class="sub">'+esc(a.anno||'')+' &middot; '+esc(a.ruolo||'&mdash;')+'</div></div></div>';
+    });
+  }
+  const html='<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Elenco '+esc(data.squad.label)+'</title><style>'
+    +'body{font-family:Arial,Helvetica,sans-serif;color:#0A1628;margin:24px;font-size:13px}'
+    +'h1{font-size:20px;margin:0 0 2px}h2{font-size:14px;font-weight:400;color:#555;margin:0 0 18px}'
+    +'.grp{font-size:11px;font-weight:800;letter-spacing:.08em;border-bottom:2px solid #0A1628;padding:12px 0 3px;margin-bottom:6px}'
+    +'.grp-n{float:right;font-weight:400;color:#888}'
+    +'.row{display:flex;align-items:center;gap:10px;padding:5px 0;border-bottom:1px solid #eee;page-break-inside:avoid}'
+    +'.ph{width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0}'
+    +'.ph-init{background:#185FA5;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px}'
+    +'.ph-empty{border:2px dashed #ccc;background:none}'
+    +'.info{flex:1}.sub{font-size:11px;color:#777;margin-top:1px}'
+    +'.tag{font-size:8px;font-weight:800;padding:1px 6px;border-radius:8px;vertical-align:middle}'
+    +'.tag.tit{background:#0A1628;color:#fff}.tag.ris{background:#E5E7EB;color:#374151}'
+    +'.st{font-size:10px;color:#555;white-space:nowrap}'
+    +'.empty{opacity:.6}'
+    +'@media print{body{margin:10mm}}'
+    +'</style></head><body>'
+    +'<h1>MEDNOW VOLLEY &mdash; '+esc(data.squad.label)+'</h1>'
+    +'<h2>Elenco squadra &middot; '+data.total+' atlete &middot; Stagione 2026/27 &middot; '+today+'</h2>'
+    +body
+    +'<script>window.onload=function(){window.print();}<\/script></body></html>';
+  const w=window.open('','_blank');
+  w.document.write(html);
+  w.document.close();
+}
+function exportElencoCSV(){
+  const data=buildElencoData();
+  if(!data){showToast('Nessuna squadra selezionata','error');return;}
+  const h=['Sezione','Cognome','Nome','Anno','Ruolo','Voto','Stato','Roster'];
+  const rows=[];
+  data.groups.forEach(g=>{
+    g.atlete.forEach(a=>{
+      rows.push([g.label,a.cognome,a.nome,a.anno||'',a.ruolo||'',a.rating||'',SL[a.status]||a.status,a._tag||''].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','));
+    });
+  });
+  data.extra.forEach(a=>{
+    rows.push(['Fuori organico',a.cognome,a.nome,a.anno||'',a.ruolo||'',a.rating||'',SL[a.status]||a.status,''].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(','));
+  });
+  const csv=[h.join(','),...rows].join('\n');
+  const b=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});
+  const u=URL.createObjectURL(b);
+  const el=document.createElement('a');
+  el.href=u;
+  el.download='elenco_'+data.squad.label.replace(/[^a-zA-Z0-9]/g,'_')+'_'+new Date().toISOString().slice(0,10)+'.csv';
+  el.click();
 }
 function selectSquad(sid){currentSquad=sid;renderSquadTabs();renderRoster();}
 function getSiblingSquadId(squadId){
