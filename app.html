@@ -865,7 +865,7 @@ td[title=""] { pointer-events: auto; }
   <div class="table-wrap">
     <table>
       <thead><tr>
-        <th>Cognome e Nome</th><th>Anno</th><th>Alt.</th><th>Ultima Societa</th><th>Ruolo</th>
+        <th>Cognome e Nome</th><th onclick="toggleColSort('anno')" style="cursor:pointer;user-select:none" title="Ordina per anno">Anno <span id="sort-arrow-anno" style="font-size:9px"></span></th><th onclick="toggleColSort('altezza')" style="cursor:pointer;user-select:none" title="Ordina per altezza">Alt. <span id="sort-arrow-altezza" style="font-size:9px"></span></th><th>Ultima Societa</th><th>Ruolo</th>
         <th>Stato</th><th>Squadra Dest.</th><th>Agente</th><th>Note</th>
         <th>&#x2605;</th><th>Aggiornato</th><th style="width:40px"></th>
       </tr></thead>
@@ -1399,8 +1399,25 @@ function getSorted(data){
   if(currentSort==='recent')return d.sort((a,b)=>(b.updatedAt||0)-(a.updatedAt||0));
   if(currentSort==='az')return d.sort((a,b)=>(a.cognome+a.nome).localeCompare(b.cognome+b.nome));
   if(currentSort==='anno')return d.sort((a,b)=>parseInt(a.anno||9999)-parseInt(b.anno||9999));
+  if(currentSort==='anno_desc')return d.sort((a,b)=>parseInt(b.anno||0)-parseInt(a.anno||0));
+  if(currentSort==='altezza_desc')return d.sort((a,b)=>(b.altezza||0)-(a.altezza||0));
+  if(currentSort==='altezza_asc')return d.sort((a,b)=>(a.altezza||999)-(b.altezza||999));
   if(currentSort==='rating')return d.sort((a,b)=>(b.rating||0)-(a.rating||0));
   return d;
+}
+function toggleColSort(col){
+  if(col==='anno'){
+    currentSort=(currentSort==='anno_desc')?'anno':'anno_desc';
+  } else if(col==='altezza'){
+    currentSort=(currentSort==='altezza_desc')?'altezza_asc':'altezza_desc';
+  }
+  const aAnno=document.getElementById('sort-arrow-anno');
+  const aAlt=document.getElementById('sort-arrow-altezza');
+  if(aAnno)aAnno.textContent=currentSort==='anno_desc'?'\u25BC':currentSort==='anno'?'\u25B2':'';
+  if(aAlt)aAlt.textContent=currentSort==='altezza_desc'?'\u25BC':currentSort==='altezza_asc'?'\u25B2':'';
+  // Deseleziona i bottoni sort standard se presenti
+  document.querySelectorAll('.sort-btn').forEach(b=>b.classList.remove('active'));
+  page=0;renderTable();
 }
 
 function setSort(s){
