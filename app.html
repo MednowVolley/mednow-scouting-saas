@@ -1108,7 +1108,34 @@ const SL={nuovo_acquisto:'Nuovo acquisto',confermata:'Confermata',in_prova:'In p
 const SC={nuovo_acquisto:'s-nuovo-acquisto',confermata:'s-confermata',in_prova:'s-in-prova',non_confermata:'s-non-confermata',trasferita_aspes:'s-trasferita',visione:'s-visione',lista:'s-lista',trattativa:'s-trattativa',no:'s-no'};
 const CYCLE=['lista','visione','in_prova','trattativa','nuovo_acquisto','confermata','non_confermata','trasferita_aspes','no'];
 const CONFIRMED=['nuovo_acquisto','confermata'];
-const UNCERTAIN=['trattativa','non_confermata'];
+const UNCERTAIN=['trattativa'];
+// ── FILTRO AGENTI DINAMICO ──
+let _agentSig='';
+function syncAgentOptions(){
+  const fromDb=athletes.map(a=>(a.agente||'').trim()).filter(Boolean);
+  const fromSettings=(typeof clubSettings!=='undefined'&&clubSettings&&clubSettings.agenti)?clubSettings.agenti:[];
+  const all=[...new Set([...fromDb,...fromSettings])].sort((a,b)=>a.localeCompare(b,'it'));
+  const sig=all.join('|');
+  if(sig===_agentSig)return;
+  _agentSig=sig;
+  const dd=document.getElementById('dd-agente');
+  if(dd){
+    const checked=new Set([...dd.querySelectorAll('input:checked')].map(cb=>cb.value));
+    dd.innerHTML=all.map(a=>{const esc=a.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');return '<label><input type="checkbox" value="'+esc+'"'+(checked.has(a)?' checked':'')+' onchange="renderTable();updateMultiFilterLabel(\'agente\')"> '+esc+'</label>';}).join('');
+  }
+  ['edit-agente','a-agente'].forEach(id=>{
+    const sel=document.getElementById(id);
+    if(!sel)return;
+    const existing=new Set([...sel.options].map(o=>o.value));
+    all.forEach(a=>{
+      if(existing.has(a))return;
+      const opt=document.createElement('option');opt.value=a;opt.textContent=a;
+      const altro=[...sel.options].find(o=>o.value==='Altro');
+      sel.insertBefore(opt,altro||null);
+    });
+  });
+}
+
 const ACTIVE=['nuovo_acquisto','confermata','in_prova','trattativa','non_confermata','trasferita_aspes'];
 const NEW_AGENTS = ['Squadre Regionali','Selezione Territoriale','Open Day'];
 
@@ -1450,6 +1477,7 @@ function fmtDate(ts){
 }
 
 function renderTable(){
+  syncAgentOptions();
   if(athletes&&athletes.length>0)buildTodo();
   renderStats();
   const data=getSorted(getFiltered());
