@@ -16,3 +16,9 @@
   from = "/admin"
   to = "/admin.html"
   status = 200
+
+[[redirects]]
+  from = "/ig"
+  to = "/signup.html?utm_source=instagram&utm_medium=social&utm_campaign=bio_link"
+  status = 302
+  force = true
