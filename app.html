@@ -897,7 +897,7 @@ td[title=""] { pointer-events: auto; }
     <!-- COLONNA SINISTRA: solo campo -->
     <div class="roster-panel" style="overflow:hidden;min-width:0">
       <div class="roster-panel-header">
-        <h3>&#x26BD; Sestetto titolare</h3>
+        <h3>&#x1F3D0; Sestetto titolare</h3>
         <span style="font-size:10px;background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);padding:2px 8px;border-radius:10px" id="titolari-count">0/7</span>
       </div>
       <div id="titolari-slots" style="padding:8px"></div>
@@ -1014,17 +1014,7 @@ td[title=""] { pointer-events: auto; }
     </div>
     <div class="drawer-field">
       <label>Squadra destinazione (multipla)</label>
-      <div id="edit-dest-checks" style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:4px">
-        <label style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:5px 8px;border:1.5px solid var(--border-med);border-radius:14px;cursor:pointer;background:var(--bg);white-space:nowrap"><input type="checkbox" value="U.19" onchange="updateDestPreview()"> U.19</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:5px 8px;border:1.5px solid var(--border-med);border-radius:14px;cursor:pointer;background:var(--bg);white-space:nowrap"><input type="checkbox" value="U.17 A" onchange="updateDestPreview()"> U.17 A</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:5px 8px;border:1.5px solid var(--border-med);border-radius:14px;cursor:pointer;background:var(--bg);white-space:nowrap"><input type="checkbox" value="U.17 B" onchange="updateDestPreview()"> U.17 B</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:5px 8px;border:1.5px solid var(--border-med);border-radius:14px;cursor:pointer;background:var(--bg);white-space:nowrap"><input type="checkbox" value="U.15 A" onchange="updateDestPreview()"> U.15 A</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:5px 8px;border:1.5px solid var(--border-med);border-radius:14px;cursor:pointer;background:var(--bg);white-space:nowrap"><input type="checkbox" value="U.15 B" onchange="updateDestPreview()"> U.15 B</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:5px 8px;border:1.5px solid var(--border-med);border-radius:14px;cursor:pointer;background:var(--bg);white-space:nowrap"><input type="checkbox" value="U.14 A" onchange="updateDestPreview()"> U.14 A</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:5px 8px;border:1.5px solid var(--border-med);border-radius:14px;cursor:pointer;background:var(--bg);white-space:nowrap"><input type="checkbox" value="U.14 B" onchange="updateDestPreview()"> U.14 B</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:5px 8px;border:1.5px solid var(--border-med);border-radius:14px;cursor:pointer;background:var(--bg);white-space:nowrap"><input type="checkbox" value="U.13" onchange="updateDestPreview()"> U.13</label>
-        <label style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:5px 8px;border:1.5px solid var(--border-med);border-radius:14px;cursor:pointer;background:var(--bg);white-space:nowrap"><input type="checkbox" value="U.12" onchange="updateDestPreview()"> U.12</label>
-      </div>
+      <div id="edit-dest-checks" style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:4px"></div>
       <div style="height:6px;background:var(--border);border-radius:3px;margin-top:6px;overflow:hidden">
         <div id="pct-bar-inner" style="height:100%;border-radius:3px;background:#EF9F27;width:50%"></div>
       </div>
@@ -1334,7 +1324,14 @@ function renderAddCard(){
         </div></div>
       <div class="field-wrap"><div class="field-label">Stato</div>
         <select id="a-status">
-          </select></div>
+          <option value="lista">In lista</option>
+          <option value="visione">Visionata</option>
+          <option value="in_prova">In prova</option>
+          <option value="trattativa">In trattativa</option>
+          <option value="nuovo_acquisto">Nuovo acquisto</option>
+          <option value="confermata">Confermata</option>
+          <option value="no">No</option>
+        </select></div>
       <div class="field-wrap"><div class="field-label">Agente</div><select id="a-agente" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:13px;font-family:inherit;background:var(--bg-card);color:var(--text)">
   <option value="">Seleziona agente</option>
   <option value="Senza agente">Senza agente</option>
@@ -1627,6 +1624,7 @@ function openDrawer(id){
   });
   document.getElementById('edit-societa').value=a.societa||'';
   document.getElementById('edit-agente').value=a.agente||'';
+  renderDestChecks();
   const destChecks=document.querySelectorAll('#edit-dest-checks input');
   const destAtleta=(a.dest||'').split('|').map(d=>d.trim()).filter(Boolean);
   destChecks.forEach(cb=>{
@@ -2451,6 +2449,7 @@ function addToRoster(aid){
   if(!r.riserve)r.riserve={};
   if(!r.titolari)r.titolari={};
   const a=athletes.find(x=>x.id===aid);
+  if(a&&['no','non_confermata','trasferita','trasferita_aspes'].includes(a.status)){showToast((a.cognome||'Atleta')+' è "'+(SL[a.status]||a.status)+'": non schierabile nel sestetto','error');return;}
   const psk=pendingSlotKey;
   const psr=pendingSlotRole;
   pendingSlotKey=null;pendingSlotRole=null;
@@ -2811,6 +2810,8 @@ function checkSettingsButton() {
 function getActiveSquads(){
   return (window.DYNAMIC_SQUADS && window.DYNAMIC_SQUADS.length) ? window.DYNAMIC_SQUADS : SQUADS;
 }
+function renderDestChecks(){var box=document.getElementById('edit-dest-checks');if(!box)return;var labels=getActiveSquads().map(function(s){return s.label;});box.innerHTML=labels.map(function(l){var v=l.replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;');return '<label style="display:flex;align-items:center;gap:4px;font-size:12px;font-weight:500;padding:5px 8px;border:1.5px solid var(--border-med);border-radius:14px;cursor:pointer;background:var(--bg);white-space:nowrap"><input type="checkbox" value="'+v+'"> '+v+'</label>';}).join('');}
+
 
 // ── ONBOARDING ──
 const OB_STEPS = [
