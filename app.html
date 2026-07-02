@@ -229,6 +229,7 @@ tbody tr:hover td{background:#EBF4FF}
 .dest-badge{font-size:10px;font-weight:600;background:#E6F1FB;color:#185FA5;border-radius:4px;padding:2px 7px;white-space:nowrap;border:1px solid #c3d9f0}
 .dest-badge.aspes{background:var(--green-bg);color:var(--green-dark);border-color:#a8dfc8}
 .dest-badge.pgs{background:var(--amber-bg);color:#854F0B;border-color:#f0ccaa}
+.pool-blocked{opacity:0.45;cursor:not-allowed !important;filter:grayscale(0.6)}
 .pct-wrap{display:flex;align-items:center;gap:6px;margin-top:4px}
 .pct-bar-bg{flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden}
 .pct-bar-fill{height:100%;border-radius:3px}
@@ -902,15 +903,7 @@ td[title=""] { pointer-events: auto; }
       </div>
       <div id="titolari-slots" style="padding:8px"></div>
     </div>
-    <!-- COLONNA 2: Riserve -->
-    <div class="roster-panel" style="min-width:0">
-      <div class="roster-panel-header" style="background:#374151">
-        <h3>&#x1F4CB; Riserve</h3>
-        <span style="font-size:10px;background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);padding:2px 8px;border-radius:10px" id="riserve-count">0</span>
-      </div>
-      <div id="riserve-slots" style="padding:8px;display:flex;flex-direction:column;gap:6px"></div>
-    </div>
-    <!-- COLONNA 3: Atlete disponibili -->
+    <!-- COLONNA 2: Atlete disponibili -->
     <div class="roster-panel" style="min-width:0">
       <div class="roster-panel-header" style="background:#1e3a5f">
         <h3>&#x1F464; Atlete disponibili</h3>
@@ -928,6 +921,14 @@ td[title=""] { pointer-events: auto; }
         <button id="pf-L" class="pool-filter-btn" onclick="setPoolFilter('L')">Libero</button>
       </div>
       <div class="pool-list" id="pool-list" style="max-height:550px;overflow-y:auto;padding:0 8px 8px"></div>
+    </div>
+    <!-- COLONNA 3: Riserve -->
+    <div class="roster-panel" style="min-width:0">
+      <div class="roster-panel-header" style="background:#374151">
+        <h3>&#x1F4CB; Riserve</h3>
+        <span style="font-size:10px;background:rgba(255,255,255,0.15);color:rgba(255,255,255,0.8);padding:2px 8px;border-radius:10px" id="riserve-count">0</span>
+      </div>
+      <div id="riserve-slots" style="padding:8px;display:flex;flex-direction:column;gap:6px"></div>
     </div>
   </div>
 
@@ -1099,6 +1100,7 @@ const SC={nuovo_acquisto:'s-nuovo-acquisto',confermata:'s-confermata',in_prova:'
 const CYCLE=['lista','visione','in_prova','trattativa','nuovo_acquisto','confermata','non_confermata','trasferita_aspes','no'];
 const CONFIRMED=['nuovo_acquisto','confermata'];
 const UNCERTAIN=['trattativa'];
+const NON_SCHIERABILI=['no','non_confermata','trasferita','trasferita_aspes','lista','visione'];
 // ── FILTRO AGENTI DINAMICO ──
 let _agentSig='';
 function syncAgentOptions(){
@@ -2424,6 +2426,7 @@ function renderPool(){
   if(!filtered.length){list.innerHTML='<div style="text-align:center;padding:2rem;color:var(--text-ter);font-size:13px">Nessuna atleta disponibile</div>';return;}
   list.innerHTML=filtered.map(a=>{
     const assigned=assignedIds.has(a.id);
+    const blocked=NON_SCHIERABILI.includes(a.status);
     const isTratt=a.status==='trattativa',isNewA=a.status==='nuovo_acquisto';
     const stBg=CONFIRMED.includes(a.status)?'#D1FAE5':isTratt?'#FFEDD5':'#E0F2FE';
     const stCol=CONFIRMED.includes(a.status)?'#065F46':isTratt?'#9A3412':'#0369A1';
@@ -2434,7 +2437,7 @@ function renderPool(){
     const avatarInner=a.foto?'<img src="'+a.foto+'" style="width:100%;height:100%;object-fit:cover;object-position:top;">'
       :'<span style="font-family:Barlow,sans-serif;font-weight:800;font-size:14px;color:#fff">'+getInitials(a.cognome,a.nome)+'</span>';
     const previewHtml=a.foto?'<div class="riserva-preview"><img src="'+a.foto+'"><div class="riserva-preview-name">'+esc(a.cognome)+'</div></div>':'';
-    return '<div class="riserva-slot'+(assigned?' assigned':'')+(isTratt?' tratt-pool':'')+'" onclick="'+(assigned?'':'addToRoster('+a.id+')')+'">'
+    return '<div class="riserva-slot'+(assigned?' assigned':'')+(isTratt?' tratt-pool':'')+(blocked?' pool-blocked':'')+'"'+(blocked?' title="Stato non schierabile"':'')+' onclick="'+((assigned||blocked)?'':'addToRoster('+a.id+')')+'">'
       +'<div class="riserva-avatar-wrap"><div class="riserva-avatar" style="background:'+bg+';border-color:'+bg+';'+(assigned?'opacity:0.45;':'')+'">'
       +avatarInner+'</div>'+previewHtml+'</div>'
       +'<div class="riserva-info"><div class="riserva-name"><b>'+esc(a.cognome)+'</b> <span style="font-weight:400">'+esc(a.nome)+'</span>'+tratMark+newMarkPool+'</div>'
@@ -2449,7 +2452,7 @@ function addToRoster(aid){
   if(!r.riserve)r.riserve={};
   if(!r.titolari)r.titolari={};
   const a=athletes.find(x=>x.id===aid);
-  if(a&&['no','non_confermata','trasferita','trasferita_aspes'].includes(a.status)){showToast((a.cognome||'Atleta')+' è "'+(SL[a.status]||a.status)+'": non schierabile nel sestetto','error');return;}
+  if(a&&NON_SCHIERABILI.includes(a.status)){showToast((a.cognome||'Atleta')+' è "'+(SL[a.status]||a.status)+'": non schierabile nel sestetto','error');return;}
   const psk=pendingSlotKey;
   const psr=pendingSlotRole;
   pendingSlotKey=null;pendingSlotRole=null;
@@ -2487,9 +2490,9 @@ function addToRiservaSlot(role,key){if(!canEditRoster(currentSquad)){showToast("
 function autoFillRoster(){
   if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster","error");return;}
   const squad=getActiveSquads().find(s=>s.id===currentSquad);
-  const available=getSquadAthletes(squad.label);
+  const available=getSquadAthletes(squad.label).filter(a=>!NON_SCHIERABILI.includes(a.status));
   const r=getRoster(currentSquad);
-  const priority=a=>['confermata','nuovo_acquisto','trattativa','non_confermata','trasferita_aspes'].indexOf(a.status);
+  const priority=a=>{const i=['confermata','nuovo_acquisto','in_prova','trattativa'].indexOf(a.status);return i<0?99:i;};
   const sorted=[...available].sort((a,b)=>priority(a)-priority(b));
   const used=new Set();
   TITOLARI_SLOTS.forEach(slot=>{
