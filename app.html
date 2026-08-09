@@ -2424,6 +2424,17 @@ function renderRoster(){
 let pendingSlotRole=null;
 function showPoolForSlot(role){if(!canEditRoster(currentSquad)){showToast("Solo l'Admin può modificare i roster","error");return;}pendingSlotRole=role;pendingSlotKey=null;setPoolFilter(role);}
 function setPoolFilter(f){poolFilter=(f||'all').toString().trim();document.querySelectorAll('.pool-filter-btn').forEach(b=>{const bid=b.id.replace('pf-','');b.classList.toggle('active',bid===f);});renderPool();}
+function rosterSquadsOf(aid){
+  var out=[];var SQ=(typeof getActiveSquads==='function')?getActiveSquads():[];
+  for(var sid in rosters){
+    var r=rosters[sid];if(!r)continue;var found=false;
+    if(r.titolari)for(var k in r.titolari){if(r.titolari[k]===aid){found=true;break;}}
+    if(!found&&r.riserve)for(var k2 in r.riserve){if(r.riserve[k2]===aid){found=true;break;}}
+    if(!found&&Array.isArray(r.riserve_libere)&&r.riserve_libere.indexOf(aid)>=0)found=true;
+    if(found){var sq=SQ.find(function(s){return s.id===sid;});out.push(sq?sq.label:sid);}
+  }
+  return out;
+}
 function renderPool(){
   const squad=getActiveSquads().find(s=>s.id===currentSquad);
   const sa=getSquadAthletes(squad.label);
@@ -2438,7 +2449,9 @@ function renderPool(){
   const list=document.getElementById('pool-list');
   if(!filtered.length){list.innerHTML='<div style="text-align:center;padding:2rem;color:var(--text-ter);font-size:13px">Nessuna atleta disponibile</div>';return;}
   list.innerHTML=filtered.map(a=>{
-    const assigned=assignedIds.has(a.id);
+    const _inSquads=rosterSquadsOf(a.id);
+    const assigned=_inSquads.includes(squad.label);
+    const _otherSquads=_inSquads.filter(function(l){return l!==squad.label;});
     const blocked=NON_SCHIERABILI.includes(a.status);
     const isTratt=a.status==='trattativa',isNewA=a.status==='nuovo_acquisto';
     const stBg=CONFIRMED.includes(a.status)?'#D1FAE5':isTratt?'#FFEDD5':'#E0F2FE';
@@ -2454,6 +2467,7 @@ function renderPool(){
       +'<div class="riserva-avatar-wrap"><div class="riserva-avatar" style="background:'+bg+';border-color:'+bg+';'+(assigned?'opacity:0.45;':'')+'">'
       +avatarInner+'</div>'+previewHtml+'</div>'
       +'<div class="riserva-info"><div class="riserva-name"><b>'+esc(a.cognome)+'</b> <span style="font-weight:400">'+esc(a.nome)+'</span>'+tratMark+newMarkPool+'</div>'
+      +(_otherSquads.length?'<div style="margin-top:2px"><span style="font-size:9px;font-weight:700;background:#FEF3C7;color:#92400E;padding:1px 6px;border-radius:6px" title="Già inserita in altre squadre">gi&#224; in '+esc(_otherSquads.join(', '))+'</span></div>':'')
       +'<div class="riserva-sub">'+esc(a.anno||'—')+'·'+esc(a.ruolo||'—')+' '+ratH+'</div></div>'
       +'<div class="riserva-right"><span style="font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;background:'+stBg+';color:'+stCol+'">'+( SL[a.status]||a.status)+'</span>'
       +(assigned?'<span style="font-size:13px;color:var(--text-ter)">✓</span>':'<span style="font-size:18px;color:var(--blue-mid)">+</span>')+'</div></div>';
@@ -2475,6 +2489,7 @@ function addToRoster(aid){
   if(psr){
     const slot=TITOLARI_SLOTS.find(s=>s.role===psr&&!r.titolari[s.key]);
     if(slot){r.titolari[slot.key]=aid;saveRosters();renderRoster();return;}
+    showToast('Nessuno slot '+({P:'Palleggiatrice',O:'Opposto',C:'Centrale',B:'Banda',L:'Libero'}[psr]||psr)+' libero: rimuovi prima un\'atleta da quel ruolo','error');return;
   }
   // Auto-assign: prima prova titolari per ruolo
   const ruoli=(a?.ruolo||'').split('/').map(x=>x.trim());
