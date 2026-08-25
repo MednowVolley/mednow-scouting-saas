@@ -716,6 +716,7 @@ td[title=""] { pointer-events: auto; }
     <div class="login-field"><label>Password</label><input type="password" id="login-password" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()"></div>
     <button class="btn-login" id="btn-login" onclick="doLogin()">Accedi</button>
     <div class="login-error" id="login-error"></div>
+    <div style="text-align:center;margin-top:12px"><a href="#" onclick="event.preventDefault();sendRecovery()" style="font-size:12px;color:var(--blue);text-decoration:none;font-weight:600">Password dimenticata?</a></div>
   </div>
 </div>
 
@@ -3124,6 +3125,70 @@ window.applyCrop=function(){if(!_cImg||!_cSel)return;var r=getR();var sx=_cImg.n
   document.addEventListener('mouseover',function(e){const wrap=e.target.closest('.riserva-avatar-wrap');if(!wrap)return;const preview=wrap.querySelector('.riserva-preview');if(!preview)return;if(preview.parentNode!==document.body){document.body.appendChild(preview);}preview.style.display='block';activePreview=preview;});
   document.addEventListener('mouseout',function(e){const wrap=e.target.closest('.riserva-avatar-wrap');if(!wrap)return;const related=e.relatedTarget;if(related&&wrap.contains(related))return;document.querySelectorAll('.riserva-preview').forEach(function(p){p.style.display='none';p.style.opacity='0';});activePreview=null;});
   document.addEventListener('mousemove',function(e){const wrap=e.target.closest('.riserva-avatar-wrap');if(!wrap)return;const preview=wrap.querySelector('.riserva-preview')||activePreview;if(!preview||preview.style.display==='none')return;var x=e.clientX,y=e.clientY-12,pw=160;if(x-pw/2<8)x=pw/2+8;if(x+pw/2>window.innerWidth-8)x=window.innerWidth-pw/2-8;if(y-(preview.offsetHeight||240)<8)y=e.clientY+20;preview.style.left=x+'px';preview.style.top=y+'px';preview.style.transform='translate(-50%,-100%)';preview.style.opacity='1';});
+})();
+</script>
+<script>
+/* ===== Reset password (recovery via email) ===== */
+function sendRecovery(){
+  var em=(document.getElementById('login-email')?document.getElementById('login-email').value:'').trim();
+  var errEl=document.getElementById('login-error');
+  if(!em){ if(errEl){errEl.textContent='Inserisci prima la tua email nel campo sopra, poi clicca "Password dimenticata?"';errEl.classList.add('show');} return; }
+  var redir=location.origin+location.pathname;
+  fetch(SUPA+'/auth/v1/recover?redirect_to='+encodeURIComponent(redir),{
+    method:'POST',headers:{'Content-Type':'application/json','apikey':KEY},
+    body:JSON.stringify({email:em})
+  }).then(function(){
+    if(errEl){errEl.style.background='#ECFDF5';errEl.style.color='#065F46';errEl.style.borderColor='#6ee7b7';errEl.textContent='Email di reset inviata a '+em+'. Controlla la posta (anche spam) e apri il link.';errEl.classList.add('show');}
+  }).catch(function(){
+    if(errEl){errEl.textContent='Errore invio email. Riprova tra poco.';errEl.classList.add('show');}
+  });
+}
+function _rpOverlay(access_token){
+  var ov=document.createElement('div');
+  ov.style.cssText='position:fixed;inset:0;background:rgba(15,23,42,.55);display:flex;align-items:center;justify-content:center;z-index:99999;padding:20px';
+  ov.innerHTML='<div style="background:#fff;border-radius:14px;max-width:380px;width:100%;padding:24px;box-shadow:0 20px 60px rgba(0,0,0,.3);font-family:Inter,system-ui,sans-serif">'
+    +'<h3 style="margin:0 0 6px;font-size:18px;color:#0f172a">Imposta nuova password</h3>'
+    +'<p style="margin:0 0 16px;font-size:13px;color:#64748b">Scegli una nuova password per il tuo account.</p>'
+    +'<input id="_rp_pwd" type="password" placeholder="Nuova password (min 6 caratteri)" style="width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;margin-bottom:10px">'
+    +'<input id="_rp_pwd2" type="password" placeholder="Ripeti password" style="width:100%;box-sizing:border-box;padding:11px 12px;border:1px solid #e2e8f0;border-radius:8px;font-size:14px;margin-bottom:6px">'
+    +'<div id="_rp_err" style="color:#dc2626;font-size:12px;min-height:16px;margin-bottom:8px"></div>'
+    +'<button id="_rp_btn" style="width:100%;padding:12px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer">Salva e accedi</button>'
+    +'</div>';
+  document.body.appendChild(ov);
+  var btn=ov.querySelector('#_rp_btn'),err=ov.querySelector('#_rp_err');
+  btn.onclick=function(){
+    var p=ov.querySelector('#_rp_pwd').value,p2=ov.querySelector('#_rp_pwd2').value;
+    if(p.length<6){err.textContent='La password deve avere almeno 6 caratteri';return;}
+    if(p!==p2){err.textContent='Le due password non coincidono';return;}
+    btn.disabled=true;btn.textContent='Salvataggio...';err.textContent='';
+    fetch(SUPA+'/auth/v1/user',{method:'PUT',headers:{'Content-Type':'application/json','apikey':KEY,'Authorization':'Bearer '+access_token},body:JSON.stringify({password:p})})
+    .then(function(r){return r.json();}).then(function(d){
+      if(d&&d.id){
+        try{history.replaceState(null,'',location.pathname);}catch(e){}
+        try{document.body.removeChild(ov);}catch(e){}
+        var errEl=document.getElementById('login-error');
+        if(errEl){errEl.style.background='#ECFDF5';errEl.style.color='#065F46';errEl.style.borderColor='#6ee7b7';errEl.textContent='Password aggiornata! Ora accedi con la nuova password.';errEl.classList.add('show');}
+      }else{
+        err.textContent=(d&&(d.msg||d.error_description))||'Link scaduto: richiedi un nuovo reset dalla login';
+        btn.disabled=false;btn.textContent='Salva e accedi';
+      }
+    }).catch(function(){err.textContent='Errore di rete, riprova';btn.disabled=false;btn.textContent='Salva e accedi';});
+  };
+}
+(function _rpCheck(){
+  try{
+    var h=location.hash||'';
+    if(h.indexOf('type=recovery')>=0&&h.indexOf('access_token=')>=0){
+      var pr={};h.replace(/^#/,'').split('&').forEach(function(kv){var q=kv.split('=');pr[q[0]]=decodeURIComponent(q[1]||'');});
+      if(pr.access_token){ if(document.body){_rpOverlay(pr.access_token);}else{window.addEventListener('DOMContentLoaded',function(){_rpOverlay(pr.access_token);});} }
+    }else if(h.indexOf('error_code=')>=0){
+      try{history.replaceState(null,'',location.pathname);}catch(e){}
+      window.addEventListener('DOMContentLoaded',function(){
+        var errEl=document.getElementById('login-error');
+        if(errEl){errEl.textContent='Link di reset scaduto o già usato. Richiedi un nuovo reset qui sotto.';errEl.classList.add('show');}
+      });
+    }
+  }catch(e){}
 })();
 </script>
 </body>
