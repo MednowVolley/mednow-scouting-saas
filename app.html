@@ -1517,10 +1517,11 @@ function renderTable(){
     const isNuova=a.id>=578&&NEW_AGENTS.includes(a.agente);
     const pctHtml=UNCERTAIN.includes(a.status)&&a.pct?`<div class="pct-wrap ${a.pct>=70?'pct-high':a.pct>=40?'pct-mid':'pct-low'}"><div class="pct-bar-bg"><div class="pct-bar-fill" style="width:${a.pct}%"></div></div><span class="pct-label">${a.pct}%</span></div>`:'';
     const editable=isAdmin()||canEditAthlete(a);
+    const gs=growthStats(a);const _cm=gs.latest!=null?gs.latest:(a.altezza||null);
     return `<tr data-id="${a.id}"${editable?` onclick="openDrawer(${a.id})"`:''}>
       <td class="name-cell">${isNew?'<span class="new-badge">NEW</span>':isNuova?'<span class="nuova-badge">Nuova</span>':''}<span style="display:inline-flex;align-items:center;gap:8px"><span class="riserva-avatar-wrap" onclick="event.stopPropagation()">${renderAvatar(a,34)}${a.foto?`<div class="riserva-preview"><img src="${a.foto}"><div class="riserva-preview-name">${esc(a.cognome)}</div></div>`:''}</span><span><span style="font-family:'Barlow',sans-serif">${esc(a.cognome)}</span> <span style="font-weight:400">${esc(a.nome)}</span></span></span></td>
       <td><strong>${esc(a.anno)}</strong></td>
-      <td>${a.altezza?`<span style="font-size:12px;font-weight:600;color:var(--navy)">${a.altezza}<span style="font-size:9px;color:var(--text-ter);font-weight:400"> cm</span></span>`:'<span style="color:var(--text-ter);font-size:11px">—</span>'}</td>
+      <td>${_cm!=null?`<span style="font-size:12px;font-weight:600;color:var(--navy)">${_cm}<span style="font-size:9px;color:var(--text-ter);font-weight:400"> cm</span></span>${gs.n>=2&&gs.deltaCm!=null?`<div style="font-size:9px;font-weight:700;color:${gs.deltaCm>=0?'#059669':'#dc2626'}">${gs.deltaCm>=0?'+':''}${gs.deltaCm}cm${gs.spurt?' 🚀':''}</div>`:''}`:'<span style="color:var(--text-ter);font-size:11px">—</span>'}</td>
       <td style="font-size:11px;color:var(--text-sec)" title="">${esc(a.societa||'—')}</td>
       <td><span class="role-badge" title="">${esc(a.ruolo||'—')}</span></td>
       <td><button class="pill ${SC[a.status]||'s-lista'}" onclick="event.stopPropagation();${editable?'cycleStatus('+a.id+')':''}">${SL[a.status]||a.status}</button>${pctHtml}</td>
@@ -1612,6 +1613,24 @@ async function delAthlete(id){
 
 var _drawerAltezze=[];
 function _mesiTra(d1,d2){try{var a=new Date(d1),b=new Date(d2);var m=(b-a)/(1000*60*60*24*30.44);return Math.max(0,Math.round(m));}catch(e){return 0;}}
+function growthStats(a){
+  var arr=((a&&a.altezze)||[]).filter(function(r){return r&&r.d&&(r.cm||r.cm===0);}).slice().sort(function(x,y){return (x.d||'').localeCompare(y.d||'');});
+  var o={n:arr.length,latest:(arr.length?arr[arr.length-1].cm:((a&&a.altezza)||null)),latestDate:(arr.length?arr[arr.length-1].d:null),deltaCm:null,months:null,cmPerYear:null,proj18:null,spurt:false,lastRate:null};
+  if(arr.length>=2){
+    var f=arr[0],l=arr[arr.length-1];
+    o.deltaCm=l.cm-f.cm;o.months=_mesiTra(f.d,l.d);
+    if(o.months>0)o.cmPerYear=Math.round(o.deltaCm/o.months*12*10)/10;
+    var p=arr[arr.length-2],mi=_mesiTra(p.d,l.d);
+    if(mi>0){o.lastRate=Math.round((l.cm-p.cm)/mi*12*10)/10;o.spurt=o.lastRate>=7;}
+    var anno=a&&parseInt(a.anno);
+    if(anno&&o.cmPerYear!=null&&o.cmPerYear>0){
+      var age=(new Date().getFullYear())-anno,yrs=18-age;
+      if(yrs>0){var proj=o.latest,rate=o.cmPerYear;for(var y=0;y<yrs;y++){proj+=rate;rate*=0.65;}o.proj18=Math.round(proj);}
+      else o.proj18=o.latest;
+    }
+  }
+  return o;
+}
 function renderAltezzeList(){
   var box=document.getElementById('edit-altezze-list');if(!box)return;
   var arr=(_drawerAltezze||[]).slice().sort(function(a,b){return (a.d||'').localeCompare(b.d||'');});
@@ -1629,6 +1648,7 @@ function renderAltezzeList(){
       +'<button type="button" onclick="removeAltezzaRil('+realIdx+')" style="margin-left:auto;background:none;border:none;color:#dc2626;cursor:pointer;font-size:15px;line-height:1">&times;</button>'
       +'</div>';
   }).join('');
+  try{var _annoV=parseInt((document.getElementById('edit-anno')||{}).value)||null;var _g=growthStats({altezze:_drawerAltezze,anno:_annoV});if(_g.n>=2){box.innerHTML+='<div style="margin-top:6px;font-size:11px;color:#334155;background:#EFF6FF;border:1px solid #bfdbfe;border-radius:8px;padding:6px 9px"><b>Crescita:</b> '+(_g.cmPerYear!=null?_g.cmPerYear+' cm/anno':'—')+(_g.proj18!=null?' &middot; <b>Proiez. ~18 anni:</b> ~'+_g.proj18+' cm <span style=\'color:#94a3b8\'>(stima)</span>':'')+(_g.spurt?' <span style=\'color:#059669;font-weight:700\'>&#128640; scatto</span>':'')+'</div>';}}catch(e){}
 }
 function addAltezzaRil(){
   var dEl=document.getElementById('edit-altezza-data'),cEl=document.getElementById('edit-altezza-cm');
@@ -1835,7 +1855,7 @@ function esc(s){return(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace
 function showToast(msg,type='success'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show '+type;setTimeout(()=>t.className='toast',2500);}
 function updatePctPreview(val){val=parseInt(val);document.getElementById('pct-preview').textContent=val+'%';const bar=document.getElementById('pct-bar-inner');bar.style.width=val+'%';bar.style.background=val>=70?'#1D9E75':val>=40?'#EF9F27':'#E24B4A';}
 function updateDatalist(dlId,field,query){const dl=document.getElementById(dlId);if(!dl)return;const q=(query||'').toLowerCase();const vals=[...new Set(athletes.map(a=>a[field]).filter(v=>v&&(!q||v.toLowerCase().includes(q))))].sort().slice(0,12);dl.innerHTML=vals.map(v=>'<option value="'+v.replace(/"/g,'&quot;')+'">').join('');}
-function exportCSV(){const data=getSorted(getFiltered());const h=['Cognome','Nome','Anno','Societa','Ruolo','Stato','Squadra Dest','Agente','Voto','Note'];const rows=data.map(a=>[a.cognome,a.nome,a.anno,a.societa,a.ruolo,SL[a.status]||a.status,a.dest,a.agente,a.rating||'',a.note].map(v=>`"${String(v==null?'':v).replace(/"/g,'""')}"`).join(','));const csv=[h.join(','),...rows].join('\n');const b=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});const u=URL.createObjectURL(b);const el=document.createElement('a');el.href=u;el.download='mednow_scouting_'+new Date().toISOString().slice(0,10)+'.csv';el.click();}
+function exportCSV(){const data=getSorted(getFiltered());const h=['Cognome','Nome','Anno','Societa','Ruolo','Stato','Squadra Dest','Agente','Voto','Altezza cm','Ultima ril.','Delta cm','cm/anno','Proiez.18','Note'];const rows=data.map(a=>[a.cognome,a.nome,a.anno,a.societa,a.ruolo,SL[a.status]||a.status,a.dest,a.agente,a.rating||'',(function(){var g=growthStats(a);return [g.latest!=null?g.latest:(a.altezza||''),g.latestDate||'',g.deltaCm!=null?g.deltaCm:'',g.cmPerYear!=null?g.cmPerYear:'',g.proj18!=null?g.proj18:''];})(),a.note].flat().map(v=>`"${String(v==null?'':v).replace(/"/g,'""')}"`).join(','));const csv=[h.join(','),...rows].join('\n');const b=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'});const u=URL.createObjectURL(b);const el=document.createElement('a');el.href=u;el.download='mednow_scouting_'+new Date().toISOString().slice(0,10)+'.csv';el.click();}
 
 function renderStars(val){val=parseInt(val)||0;const c=document.getElementById('drawer-stars');if(!c)return;c.innerHTML='';for(let i=1;i<=10;i++){const s=document.createElement('span');s.className='star'+(i<=val?' on':'');s.textContent='★';s.onmouseenter=()=>c.querySelectorAll('.star').forEach((x,j)=>x.classList.toggle('on',j<i));s.onmouseleave=()=>{const cur=parseInt(document.getElementById('edit-rating').value)||0;c.querySelectorAll('.star').forEach((x,j)=>x.classList.toggle('on',j<cur));};s.onclick=()=>{document.getElementById('edit-rating').value=i;document.getElementById('rating-num-display').textContent=i;renderStars(i);};c.appendChild(s);}document.getElementById('edit-rating').value=val;document.getElementById('rating-num-display').textContent=val>0?val:'—';}
 function renderAddStars(val){val=parseInt(val)||0;const c=document.getElementById('add-stars');if(!c)return;c.innerHTML='';for(let i=1;i<=10;i++){const s=document.createElement('span');s.className='star'+(i<=val?' on':'');s.textContent='★';s.onmouseenter=()=>c.querySelectorAll('.star').forEach((x,j)=>x.classList.toggle('on',j<i));s.onmouseleave=()=>{const cur=parseInt(document.getElementById('a-rating').value)||0;c.querySelectorAll('.star').forEach((x,j)=>x.classList.toggle('on',j<cur));};s.onclick=()=>{document.getElementById('a-rating').value=i;document.getElementById('add-rating-num').textContent=i;renderAddStars(i);};c.appendChild(s);}}
