@@ -977,6 +977,14 @@ td[title=""] { pointer-events: auto; }
     <div class="drawer-row2">
       <div class="drawer-field"><label>Anno nascita</label><input type="text" id="edit-anno"></div>
     <div class="drawer-field"><label>Altezza (cm)</label><input type="number" id="edit-altezza" min="140" max="220" placeholder="es. 178"></div>
+    <div class="drawer-field"><label>Rilevazioni altezza (crescita)</label>
+      <div id="edit-altezze-list" style="display:flex;flex-direction:column;gap:4px;margin-bottom:6px"></div>
+      <div style="display:flex;gap:6px;align-items:center">
+        <input type="date" id="edit-altezza-data" style="flex:1;min-width:0">
+        <input type="number" id="edit-altezza-cm" min="120" max="230" placeholder="cm" style="width:72px">
+        <button type="button" onclick="addAltezzaRil()" style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:8px 13px;font-weight:700;cursor:pointer;font-size:16px;line-height:1">+</button>
+      </div>
+    </div>
       <div class="drawer-field"><label>Stato</label>
         <select id="edit-status">
           <option value="lista">In lista</option>
@@ -1373,8 +1381,8 @@ async function loadAthletes(){
 }
 
 function setSyncPill(s,t){const p=document.getElementById('sync-pill');p.className='sync-pill '+s;p.innerHTML=t;}
-function dbToApp(r){return{id:r.id,cognome:r.cognome,nome:r.nome,anno:r.anno||'',ruolo:r.ruolo||'',societa:r.societa||'',status:r.status||'lista',agente:r.agente||'',note:r.note||'',dest:r.dest||'',rating:r.rating||0,pct:r.pct||50,telefono:r.telefono||'',altezza:r.altezza||null,foto:r.foto||null,createdAt:r.created_at||0,updatedAt:r.updated_at||0};}
-function appToDB(a){return{id:a.id,cognome:a.cognome,nome:a.nome,anno:a.anno,ruolo:a.ruolo||null,societa:a.societa||null,status:a.status||'lista',agente:a.agente||null,note:a.note||null,dest:a.dest||null,telefono:a.telefono||null,altezza:a.altezza||null,rating:a.rating||0,pct:a.pct||50,created_at:a.createdAt||Date.now(),updated_at:Date.now()};}
+function dbToApp(r){return{id:r.id,cognome:r.cognome,nome:r.nome,anno:r.anno||'',ruolo:r.ruolo||'',societa:r.societa||'',status:r.status||'lista',agente:r.agente||'',note:r.note||'',dest:r.dest||'',rating:r.rating||0,pct:r.pct||50,telefono:r.telefono||'',altezza:r.altezza||null,altezze:Array.isArray(r.altezze)?r.altezze:[],foto:r.foto||null,createdAt:r.created_at||0,updatedAt:r.updated_at||0};}
+function appToDB(a){return{id:a.id,cognome:a.cognome,nome:a.nome,anno:a.anno,ruolo:a.ruolo||null,societa:a.societa||null,status:a.status||'lista',agente:a.agente||null,note:a.note||null,dest:a.dest||null,telefono:a.telefono||null,altezza:a.altezza||null,altezze:(a.altezze||[]),rating:a.rating||0,pct:a.pct||50,created_at:a.createdAt||Date.now(),updated_at:Date.now()};}
 
 async function saveAthlete(a){
   a.updatedAt=Date.now();
@@ -1602,6 +1610,39 @@ async function delAthlete(id){
   catch(e){showToast('Errore: '+e.message,'error');}
 }
 
+var _drawerAltezze=[];
+function _mesiTra(d1,d2){try{var a=new Date(d1),b=new Date(d2);var m=(b-a)/(1000*60*60*24*30.44);return Math.max(0,Math.round(m));}catch(e){return 0;}}
+function renderAltezzeList(){
+  var box=document.getElementById('edit-altezze-list');if(!box)return;
+  var arr=(_drawerAltezze||[]).slice().sort(function(a,b){return (a.d||'').localeCompare(b.d||'');});
+  if(!arr.length){box.innerHTML='<div style="font-size:11px;color:#94a3b8">Nessuna rilevazione. Aggiungi data + cm qui sotto.</div>';return;}
+  var base=arr[0];
+  box.innerHTML=arr.map(function(r,i){
+    var delta;
+    if(i>0){var dc=(r.cm||0)-(base.cm||0);var mm=_mesiTra(base.d,r.d);delta='<span style="font-size:10px;font-weight:700;color:'+(dc>=0?'#059669':'#dc2626')+'">'+(dc>=0?'+':'')+dc+' cm &middot; '+mm+' mesi</span>';}
+    else{delta='<span style="font-size:10px;color:#94a3b8">base</span>';}
+    var realIdx=_drawerAltezze.indexOf(r);
+    return '<div style="display:flex;align-items:center;gap:8px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:5px 8px">'
+      +'<span style="font-size:12px;color:#475569;min-width:78px">'+esc(r.d||'—')+'</span>'
+      +'<b style="font-size:13px;color:#0f172a">'+esc(String(r.cm||'—'))+' cm</b>'
+      +delta
+      +'<button type="button" onclick="removeAltezzaRil('+realIdx+')" style="margin-left:auto;background:none;border:none;color:#dc2626;cursor:pointer;font-size:15px;line-height:1">&times;</button>'
+      +'</div>';
+  }).join('');
+}
+function addAltezzaRil(){
+  var dEl=document.getElementById('edit-altezza-data'),cEl=document.getElementById('edit-altezza-cm');
+  var d=dEl?dEl.value:'',cm=cEl?parseInt(cEl.value):0;
+  if(!d){if(typeof showToast==='function')showToast('Inserisci la data della rilevazione','error');return;}
+  if(!cm||cm<120||cm>230){if(typeof showToast==='function')showToast('Altezza non valida (cm)','error');return;}
+  _drawerAltezze=(_drawerAltezze||[]).filter(function(r){return r.d!==d;});
+  _drawerAltezze.push({d:d,cm:cm});
+  var latest=_drawerAltezze.slice().sort(function(a,b){return (b.d||'').localeCompare(a.d||'');})[0];
+  if(latest&&latest.d===d){var m=document.getElementById('edit-altezza');if(m)m.value=cm;}
+  if(dEl)dEl.value='';if(cEl)cEl.value='';
+  renderAltezzeList();
+}
+function removeAltezzaRil(idx){ _drawerAltezze.splice(idx,1); renderAltezzeList(); }
 function openDrawer(id){
   try{
   const a=athletes.find(x=>x.id===id);if(!a){showToast('Atleta non trovata id='+id,'error');return;}
@@ -1629,6 +1670,7 @@ function openDrawer(id){
   document.getElementById('edit-nome').value=a.nome||'';
   document.getElementById('edit-anno').value=a.anno||'';
   const _ea=document.getElementById('edit-altezza');if(_ea)_ea.value=a.altezza||'';
+  _drawerAltezze=Array.isArray(a.altezze)?a.altezze.slice():[];renderAltezzeList();
   document.getElementById('edit-status').value=a.status||'lista';
   const checks=document.querySelectorAll('#edit-ruolo-checks input');
   const ruoliAtleta=(a.ruolo||'').split('/').map(r=>r.trim());
@@ -1695,6 +1737,7 @@ async function saveDrawer(){
   if(telEl)a.telefono=telEl.value.trim();
   const altEl=document.getElementById('edit-altezza');
   if(altEl)a.altezza=parseInt(altEl.value)||null;
+  a.altezze=(_drawerAltezze||[]).slice();
   const fotoEl2=document.getElementById('edit-foto');
   if(fotoEl2){
     const nf=fotoEl2.value||null;
